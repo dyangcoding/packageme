@@ -5,7 +5,7 @@ class Header extends React.PureComponent {
     render() {
         return (
             <Router>
-                <div className="App">
+                <div className="container mx-auto max-w-6xl">
                     <div className="header-2">
                         <nav className="bg-white py-2 md:py-4">
                             <div className="container px-4 mx-auto md:flex md:items-center">
