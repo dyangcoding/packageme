@@ -1,4 +1,6 @@
-import { UpstreamParcelProperties } from "../models/parcel";
+import { fetchParcels } from "../app/mongo-client";
+import { ThunkAction } from "../app/store";
+import { ParcelProperties } from "../models/parcel";
 
 export enum ActionType {
     LoadParcelsStartedAction = "LOAD_ParcelS_STARTED",
@@ -19,7 +21,7 @@ export interface LoadParcelsStartedAction {
 
 export interface LoadParcelsCompletedAction {
     readonly type: ActionType.LoadParcelsCompletedAction;
-    readonly tweets: ReadonlyArray<UpstreamParcelProperties>;
+    readonly parcels: ReadonlyArray<ParcelProperties>;
 }
 
 export interface LoadParcelsFailedAction {
