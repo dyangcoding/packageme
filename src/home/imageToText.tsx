@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ImagePicker from "../components/ImagePicker";
 import { CloudUploadIcon } from "@heroicons/react/outline";
 import { createWorker } from "tesseract.js";
 import Tooltip from "../components/tooltip-wrapper";
 import Spinner from "../components/Spinner";
-import TagInput from "../components/TagInput";
-import Tag from "../components/Tag";
+import ParcelInput from "../components/ParcelInput";
+import { ParcelProperties } from "../models/parcel";
 
 interface ImageToTextProps {}
 
@@ -13,7 +13,7 @@ interface ImageToTextState {
     readonly images: ReadonlyArray<File>;
     readonly text: string;
     readonly processing: boolean;
-    readonly tags: ReadonlyArray<string>;
+    readonly parcels: ReadonlyArray<ParcelProperties>;
     readonly checked: boolean;
     readonly error?: string;
 }
@@ -25,11 +25,11 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
             images: [],
             text: "",
             processing: false,
-            tags: [],
+            parcels: [] as ParcelProperties[],
             checked: false,
         }
         this.onFileChange = this.onFileChange.bind(this);
-        this.onTagsChange = this.onTagsChange.bind(this);
+        this.onParcelsChange = this.onParcelsChange.bind(this);
         this.onTermOfServiceChange = this.onTermOfServiceChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -114,6 +114,17 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
     private renderPackageInfos() {
         return (
             <div className="container w-1/3 flex-col my-4 p-4">
+                {this.renderInputSection()}
+                {this.renderTermsOfService()}
+                {this.renderErrorMessage()}
+                {this.renderUploadAction()}
+            </div>
+        );
+    }
+
+    private renderInputSection(): React.ReactNode {
+        return (
+            <Fragment>
                 <div className="flex items-center space-x-1">
                     <div className="font-medium text-gray-700">
                         Package Infos
@@ -121,23 +132,20 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <Tooltip id="package-info" title="Select the most import Info" description={"DESC.TagDesc"} />
                 </div>
                 <div className="my-2">
-                    <TagInput onTagsChange={this.onTagsChange} />
+                    <ParcelInput onParcelsChange={this.onParcelsChange} />
                 </div>
-                <Tag tag="test tag component" onDelete={this.onTagDelete} />
-                <div className="flex items-center mt-2">
-                    <input id="term-of-service" name="term-of-service" type="checkbox" onChange={this.onTermOfServiceChange}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
-                    <label htmlFor="term-of-service" className="ml-1 block text-xs text-gray-800">
-                        You are agree with the Terms of Service.
-                    </label>
-                </div>
-                {this.renderErrorMessage()}
-                <div className="my-2">
-                    <button type="submit" onClick={this.onSubmit}
-                        className="flex py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Upload
-                    </button>
-                </div>
+            </Fragment>
+        );
+    }
+
+    private renderTermsOfService(): React.ReactNode {
+        return (
+            <div className="flex items-center mt-2">
+                <input id="term-of-service" name="term-of-service" type="checkbox" onChange={this.onTermOfServiceChange}
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
+                <label htmlFor="term-of-service" className="ml-1 block text-xs text-gray-800">
+                    You are agree with the Terms of Service.
+                </label>
             </div>
         );
     }
@@ -155,8 +163,19 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
         return null;
     }
 
-    private onTagsChange(tags: ReadonlyArray<string>): void {
-        this.setState({tags: tags});
+    private renderUploadAction(): React.ReactNode {
+        return (
+            <div className="my-2">
+                <button type="submit" onClick={this.onSubmit}
+                    className="flex py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Upload
+                </button>
+            </div>
+        );
+    }
+
+    private onParcelsChange(parcels: ReadonlyArray<ParcelProperties>): void {
+        this.setState({parcels: parcels});
     }
 
     private onTermOfServiceChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -169,10 +188,6 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
             this.setState({error: "Please agree with the Terms of Service."});
             return;
         }
-    }
-
-    private onTagDelete(tag: string): void {
-        console.log(tag);
     }
 }
 
