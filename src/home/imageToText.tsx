@@ -56,9 +56,6 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
     }
 
     public render() {
-        if (this.state.processing) {
-            return <Spinner />;
-        }
         return (
             <div className="container mx-auto max-w-6xl flex space-x-4 bg-gray-100">
                 {this.pickImage()}
@@ -75,20 +72,25 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <div className="font-medium text-gray-700">
                         Pick Image
                     </div>
-                    <Tooltip id="image-picker" title="Pick Images" description={"DESC.TagDesc"} />
+                    <Tooltip id="image-picker" title="Pick Images" description={INFO.imagePickerInfo} />
                 </div>
                 <div className="flex justify-center items-center h-96 mt-2 border-dashed border-4 rounded-md">
-                    <div className="flex-col">
-                        <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange} >
-                            <CloudUploadIcon className="cursor-pointer h-12 w-12" aria-hidden="true" />
-                        </ImagePicker>
-                        <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange}>
-                            <a className="underline" href="#">Browse</a>
-                        </ImagePicker>
-                        <div className="flex justify-center items-center mb-4">
-                            JEPG, PNG, WebP up to 50 mb
+                    {this.state.processing
+                        ?
+                        <Spinner />
+                        :
+                        <div className="flex-col">
+                            <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange} >
+                                <CloudUploadIcon className="cursor-pointer h-12 w-12" aria-hidden="true" />
+                            </ImagePicker>
+                            <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange}>
+                                <a className="underline" href="#">Browse</a>
+                            </ImagePicker>
+                            <div className="flex justify-center items-center mb-4">
+                                JEPG, PNG, WebP up to 50 mb
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         );
