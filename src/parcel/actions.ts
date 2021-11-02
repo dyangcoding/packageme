@@ -35,10 +35,40 @@ export interface ParcelInsertingStartedAction {
 
 export interface ParcelInsertingCompletedAction {
     readonly type: ActionType.ParcelInsertingCompletedAction;
-    readonly Parcel: UpstreamParcelProperties;
+    readonly parcel: ParcelProperties;
 }
 
 export interface ParcelInsertingFailedAction {
     readonly type: ActionType.ParcelInsertingFailedAction;
     readonly error: Error;
+}
+
+export function loadParcels(): ThunkAction<Action> {
+    return dispatch => {
+        dispatch({type: ActionType.LoadParcelsStartedAction});
+        fetchParcels().then(
+            results => dispatch({type: ActionType.LoadParcelsCompletedAction, parcels: sortParcels(results)}),
+            reason => dispatch({type: ActionType.LoadParcelsFailedAction, error: reason})
+        );
+    }
+}
+
+export function insertParcel(parcel: ParcelProperties): ThunkAction<Action> {
+    return dispatch => {
+        dispatch({type: ActionType.ParcelInsertingStartedAction});
+        dispatch({type: ActionType.ParcelInsertingCompletedAction, parcel: parcel});
+    }
+}
+
+// sort the parcels reversely according the diliver date
+function sortParcels(parcels: ParcelProperties[]): ParcelProperties[] {
+    if (!parcels) {
+        return [];
+    }
+    return parcels.sort((p1, p2) => {
+        if (!p1.deliverDate || !p2.deliverDate) {
+            return 0;
+        }
+        return new Date(p2.deliverDate).getTime() - new Date(p1.deliverDate).getTime();
+    });
 }

@@ -1,5 +1,5 @@
 import * as Realm from "realm-web";
-import { UpstreamParcelProperties } from "../models/parcel";
+import { ParcelProperties, UpstreamParcelProperties } from "../models/parcel";
 
 /*
 Modify Mongo Collection Output using Aggregation Pipelines
@@ -19,7 +19,7 @@ const app = new Realm.App({ id: REALM_APP_ID });
 
 async function loggIn() {
     const user: Realm.User = await app.logIn(Realm.Credentials.anonymous())
-    return user
+    return user;
 }
 
 async function getMongoDB() {
@@ -32,4 +32,11 @@ export async function parcelCollection() {
     return mongoDb
         .db("findMyPackages")
         .collection<UpstreamParcelProperties>("parcels");
+}
+
+export async function fetchParcels() {
+    const collection = await parcelCollection();
+    return collection
+        .aggregate(pipeline)
+        .then(tweets => tweets as Array<ParcelProperties>);
 }

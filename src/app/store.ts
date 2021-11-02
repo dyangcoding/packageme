@@ -33,8 +33,8 @@ const parcelsPipeline = [
   (() => {
     parcelCollection()
     .then(async collection => {
-        for await (const tweet of collection.watch(parcelsPipeline)) {
-          const { fullDocument } = tweet as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
+        for await (const parcel of collection.watch(parcelsPipeline)) {
+          const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
           if (fullDocument) {
             store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
             store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: toParcelProperties(fullDocument)});
