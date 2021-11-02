@@ -1,24 +1,38 @@
 import React from "react";
 import { SearchIcon } from "@heroicons/react/outline";
+import { ParcelProperties } from "../models/parcel";
+import { AppState } from "../app/store";
+import { connect } from "react-redux";
+import { loadParcels } from "./actions";
+import ParcelEntry from "./parcel-entry";
 
-interface ParcelListProps {
-
+interface StateProps {
+    readonly parcels: ReadonlyArray<ParcelProperties>;
+    readonly isLoading: string;
+    readonly error: string | undefined;
 }
 
-interface ParcelListState {
-
+interface DispatchProps {
+    readonly onLoad: () => void;
 }
 
-class ParcelList extends React.Component<ParcelListProps, ParcelListState> {
+interface ParcelListProps extends StateProps, DispatchProps {}
+
+class ParcelListComponent extends React.Component<ParcelListProps> {
     constructor(props: ParcelListProps){
         super(props);
     }
 
+    public componentDidMount(): void {
+        this.props.onLoad();
+    }
+
     private renderHeader() {
+        const parcels = this.props.parcels;
         return (
             <div className="flex justify-between bg-white my-2 py-4 border-b-2">
                 <div className="flex items-center text-2xl">
-                    Uncollected Packages in Total: <span className="underline px-2">123</span>
+                    Uncollected Packages in Total: <span className="underline px-2">{parcels.length.toLocaleString()}</span>
                 </div>
                 <div className="relative w-1/2">
                     <div className="absolute top-2 left-2"> 
@@ -37,13 +51,14 @@ class ParcelList extends React.Component<ParcelListProps, ParcelListState> {
     }
 
     public render(): React.ReactNode {
+        const parcels = this.props.parcels;
         return (
             <div className="container mx-auto max-w-6xl p-4 my-4">
                 {this.renderHeader()}
                 <div className="divide-solid w-full"></div>
-                <div className="flex-col items-center mt-4">
-                    {["package1", "package2", "package3"].map((entry, index) => {
-                        return <div key={index}>{entry}</div>
+                <div className="flex-col items-center my-4 space-y-2">
+                    {parcels.map((parcel, index) => {
+                        return <ParcelEntry key={index} parcel={parcel} />;
                     })}
                 </div>
             </div>
@@ -51,4 +66,18 @@ class ParcelList extends React.Component<ParcelListProps, ParcelListState> {
     }
 }
 
-export default ParcelList;
+function mapStateToProps(state: AppState): StateProps {
+    return {
+        parcels: state.parcels.value,
+        isLoading: state.parcels.loading,
+        error: state.parcels.error
+    };
+}
+
+function mapDispatchToProps(dispatch: any): DispatchProps {
+    return {
+        onLoad: () => dispatch(loadParcels())
+    }
+}
+
+export const ParcelList = connect(mapStateToProps, mapDispatchToProps)(ParcelListComponent);
