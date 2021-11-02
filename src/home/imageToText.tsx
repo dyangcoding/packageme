@@ -6,6 +6,7 @@ import Tooltip from "../components/tooltip-wrapper";
 import Spinner from "../components/Spinner";
 import ParcelInput from "../components/ParcelInput";
 import { ParcelProperties } from "../models/parcel";
+import * as INFO from "../utils/stringUtils";
 
 interface ImageToTextProps {}
 
@@ -39,16 +40,13 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
             return;
         }
         let result = "";
-        const worker = createWorker({
-            logger: (m) => console.log(m),
-        })
+        const worker = createWorker()
         this.setState({processing: true});
         await worker.load();
         await worker.loadLanguage('deu+eng');
         await worker.initialize('deu+eng');
         for (const file of files) {
             const { data: { text }} = await worker.recognize(file);
-            console.log(text);
             result += text;
         }
         await worker.terminate();
@@ -103,7 +101,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <div className="font-medium text-gray-700">
                         OCR Text
                     </div>
-                    <Tooltip id="ocr-text" title="Text detected from the Images" description={"DESC.TagDesc"} />
+                    <Tooltip id="ocr-text" title="Optical character recongnition" description={INFO.ocrTextInfo} />
                 </div>
                 <div className="mt-2">
                     <textarea id="ocr-text" name="ocr-text" rows={19} value={this.state.text} readOnly
@@ -131,7 +129,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <div className="font-medium text-gray-700">
                         Package Infos
                     </div>
-                    <Tooltip id="package-info" title="Select the most import Info" description={"DESC.TagDesc"} />
+                    <Tooltip id="package-info" title="Package Information" description={INFO.parcelInfo} />
                 </div>
                 <div className="my-2">
                     <ParcelInput onParcelsChange={this.onParcelsChange} />
