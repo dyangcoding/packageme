@@ -14,6 +14,8 @@ interface ParcelState {
 }
 
 class ParcelInput extends React.Component<ParcelProps, ParcelState> {
+    private infoInput: React.RefObject<HTMLInputElement>;
+
     constructor(props: ParcelProps) {
         super(props);
 
@@ -23,9 +25,12 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
             parcels: [] as ParcelProperties[],
         }
 
+        this.infoInput = React.createRef();
+
         this.onInfoChange = this.onInfoChange.bind(this);
         this.onRemarkChange = this.onRemarkChange.bind(this);
-        this.onKeyDown = this.onKeyDown.bind(this);
+        this.onInfoKeyDown = this.onInfoKeyDown.bind(this);
+        this.onRemarkKeyDown = this.onRemarkKeyDown.bind(this);
         this.onDeleteParcel = this.onDeleteParcel.bind(this);
     }
 
@@ -36,19 +41,19 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
         return (
             <Fragment>
                 <div className="flex-col rounded-md shadow-sm">
-                    <input type="text" name="parcel-info" id="parcel-info" value={info || ""} onChange={this.onInfoChange} onKeyDown={this.onKeyDown}
-                        placeholder="22xxxx your package is arrived"
+                    <input type="text" name="parcel-info" id="parcel-info" value={info || ""} onChange={this.onInfoChange} onKeyDown={this.onInfoKeyDown}
+                        placeholder="22xxxx your package is arrived." ref={this.infoInput}
                         className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
-                {this.renderErrorMessage()}
                 <div className=" my-1 text-sm">
                     Remark
                 </div>
                 <div className="">
-                    <input type="text" name="remark" id="remark" value={remark || ""} onChange={this.onRemarkChange} onKeyDown={this.onKeyDown}
-                            placeholder="Pick up at 22xxx1"
+                    <input type="text" name="remark" id="remark" value={remark || ""} onChange={this.onRemarkChange} onKeyDown={this.onRemarkKeyDown}
+                            placeholder="Pick up at 22xxx1."
                             className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
+                {this.renderErrorMessage()}
                 <div className="flex-col space-y-2 mt-2">
                     {parcels.map((parcel, index) => {
                         return <ParcelTag key={index} parcel={parcel} onDelete={this.onDeleteParcel} />;
@@ -81,29 +86,57 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
         this.setState({remark: event.target.value});
     }
 
-    private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+    private onInfoKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
         const parcels = this.state.parcels;
-        const trimmedInput = this.state.parcelInfo.trim();
-        if (parcels.find(parcel => parcel.info === trimmedInput)) {
-            this.setState({error: "Package Info exists."});
+        const trimmedInfo = this.state.parcelInfo.trim();
+        if (parcels.find(parcel => parcel.info === trimmedInfo)) {
+            this.setState({error: "Package Info exists already."});
             return;
         }
-        if (event.code === "Enter" && trimmedInput.length && !parcels.find(parcel => parcel.info === trimmedInput)) {
+        if (event.code === "Enter" && this.validate()) {
             event.preventDefault();
-            const parcel = {
-                info: trimmedInput, 
-                remark: this.state.remark, 
-                deliverDate: Date().toString(), 
-                collected: false
-            };
-            this.setState(prevState => 
-                ({
-                    parcels: [...prevState.parcels, parcel], 
-                    parcelInfo: "", 
-                    remark: ""
-                })
-            );
+            this.handleChange();
         }
+    }
+
+    private onRemarkKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.code === "Enter") {
+            const trimmedInfo = this.state.parcelInfo.trim();
+            if (!trimmedInfo.length) {
+                this.setState({error: "Package Info can not be empty."});
+                return;
+            }
+            if (this.validate()) {
+                event.preventDefault();
+                this.handleChange();
+                this.infoInput.current?.focus();
+            }
+        }
+    }
+
+    private validate(): boolean {
+        const info = this.state.parcelInfo.trim();
+        const parcels = this.state.parcels;
+        return info.length > 0 && !parcels.find(parcel => parcel.info === info);
+    }
+
+    private buildParcel(): ParcelProperties {
+        return {
+            info: this.state.parcelInfo.trim(), 
+            remark: this.state.remark, 
+            deliverDate: Date().toString(), 
+            collected: false
+        } as ParcelProperties;
+    }
+
+    private handleChange(): void {
+        this.setState(prevState => 
+            ({
+                parcels: [...prevState.parcels, this.buildParcel()], 
+                parcelInfo: "", 
+                remark: ""
+            })
+        );
     }
 
     private onDeleteParcel(parcelInfo: string): void {
