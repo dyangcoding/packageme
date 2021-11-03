@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './home/header';
 import ImageToText from './home/imageToText';
 import Footer from './home/footer';
-import ParcelList from './parcel/parcels';
+import { ParcelList } from './parcel/parcels';
 import './App.css';
 
 function App() {

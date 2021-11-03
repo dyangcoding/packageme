@@ -58,7 +58,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
             <div className="container mx-auto max-w-6xl flex space-x-4 bg-gray-100">
                 {this.pickImage()}
                 {this.renderText()}
-                {this.renderPackageInfos()}
+                {this.renderParcelInfos()}
             </div>
         );
     }
@@ -111,11 +111,10 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
         );
     }
 
-    private renderPackageInfos() {
+    private renderParcelInfos() {
         return (
-            <div className="container w-1/3 flex-col my-4 p-4">
+            <div className="container w-1/3 flex-col my-4 p-4 overflow-y-auto h-112">
                 {this.renderInputSection()}
-                {this.renderTermsOfService()}
                 {this.renderErrorMessage()}
                 {this.renderUploadAction()}
             </div>
@@ -138,18 +137,6 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
         );
     }
 
-    private renderTermsOfService(): React.ReactNode {
-        return (
-            <div className="flex items-center mt-2">
-                <input id="term-of-service" name="term-of-service" type="checkbox" onChange={this.onTermOfServiceChange}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
-                <label htmlFor="term-of-service" className="ml-1 block text-xs text-gray-800">
-                    You are agree with the Terms of Service.
-                </label>
-            </div>
-        );
-    }
-
     private renderErrorMessage(): React.ReactNode {
         const message = this.state.error;
         const checked = this.state.checked;
@@ -165,7 +152,14 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private renderUploadAction(): React.ReactNode {
         return (
-            <div className="my-2">
+            <div className="upload my-2">
+                <div className="flex items-center my-2">
+                    <input id="term-of-service" name="term-of-service" type="checkbox" onChange={this.onTermOfServiceChange}
+                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
+                    <label htmlFor="term-of-service" className="ml-1 block text-xs text-gray-800">
+                        You are agree with the Terms of Service.
+                    </label>
+                </div>
                 <button type="submit" onClick={this.onSubmit}
                     className="flex py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Upload
