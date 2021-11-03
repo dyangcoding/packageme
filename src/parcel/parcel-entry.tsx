@@ -1,18 +1,19 @@
 import React from "react";
 import { ParcelProperties } from "../models/parcel";
-import { MailIcon, BellIcon, CalendarIcon } from "@heroicons/react/outline";
+import { MailIcon, BellIcon, CalendarIcon, MailOpenIcon, InboxIcon, CheckIcon } from "@heroicons/react/outline";
+import ReactTooltip from "react-tooltip";
 
 interface EntryProps {
     readonly parcel: ParcelProperties;
 }
 
-interface EntryState {
-
-}
+interface EntryState {}
 
 class ParcelEntry extends React.Component<EntryProps, EntryState> {
     constructor(props: EntryProps) {
         super(props);
+
+        this.onCollect = this.onCollect.bind(this);
     }
 
     public render(): React.ReactNode {
@@ -24,17 +25,74 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
                     <span className="">{parcel.info}</span>
                 </div>
                 <div className="flex items-center space-x-2 mx-2"> 
-                    <div className="flex items-center space-x-1">
-                        <CalendarIcon className="h-4 w-4" aria-hidden="true" />
-                        <span className="text-sm">{parcel.deliverDate}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                        <BellIcon className="h-4 w-4" aria-hidden="true" />
-                        <span className="text-sm">{parcel.remark}</span>
-                    </div>
+                    {this.renderDate()}
+                    {this.renderRemark()}
+                    {this.renderStatus()}
+                    {this.renderCollectAction()}
                 </div>
             </div>
         );
+    }
+
+    private renderDate(): React.ReactNode {
+        const date = this.props.parcel.deliverDate;
+        return (
+            <div className="flex items-center">
+                <CalendarIcon className="h-4 w-4" aria-hidden="true" />
+                <span className="text-sm">{date}</span>
+            </div>
+        );
+    }
+
+    private renderRemark(): React.ReactNode {
+        const remark = this.props.parcel.remark;
+        if (remark) {
+            return (
+                <div className="flex items-center">
+                    <BellIcon className="h-4 w-4" aria-hidden="true" />
+                    <span className="text-sm">{remark}</span>
+                </div>
+            );
+        }
+        return null;
+    }
+
+    private renderStatus(): React.ReactNode {
+        let clazzName = "flex items-center p-2 rounded-full cursor-pointer";
+        let status;
+        let hint = "Package is ";
+        const collected = this.props.parcel.collected;
+        if (collected) {
+            clazzName += " bg-green-100";
+            status = <MailOpenIcon className="text-green-500 h-4 w-4" aria-hidden="true" />;
+            hint += " collected.";
+        } else {
+            clazzName += " bg-yellow-100";
+            status = <InboxIcon className="text-yellow-500 h-4 w-4" aria-hidden="true" />;
+            hint += " uncollected.";
+        }
+        return (
+            <div className={clazzName} data-tip={hint}>
+                {status}
+                <ReactTooltip />
+            </div>
+        );
+    }
+
+    private renderCollectAction(): React.ReactNode {
+        const status = this.props.parcel.collected;
+        if (!status) {
+            return (
+                <div className="flex items-center bg-gray-200 cursor-pointer rounded-full p-2" onClick={this.onCollect}>
+                    <CheckIcon className="text-gray-500 h-6 w-6" aria-hidden="true" />
+                </div>
+            );
+        }
+        return null;
+    }
+
+    private onCollect(): void {
+
     }
 }
 
