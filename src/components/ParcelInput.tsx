@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { ParcelProperties } from "../models/parcel";
-import Tag from "./Tag";
+import ParcelTag from "./ParcelTag";
 
 interface ParcelProps {
     readonly onParcelsChange: (parcels: ReadonlyArray<ParcelProperties>) => void;
@@ -10,6 +10,7 @@ interface ParcelState {
     readonly parcelInfo: string;
     readonly remark: string;
     readonly parcels: ParcelProperties[];
+    readonly error?: string;
 }
 
 class ParcelInput extends React.Component<ParcelProps, ParcelState> {
@@ -36,9 +37,10 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
             <Fragment>
                 <div className="flex-col rounded-md shadow-sm">
                     <input type="text" name="parcel-info" id="parcel-info" value={info || ""} onChange={this.onInfoChange} onKeyDown={this.onKeyDown}
-                        placeholder="Max Mustermann / 22xxxx your package is arrived"
+                        placeholder="22xxxx your package is arrived"
                         className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
+                {this.renderErrorMessage()}
                 <div className=" my-1 text-sm">
                     Remark
                 </div>
@@ -49,14 +51,29 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
                 </div>
                 <div className="flex-col space-y-2 mt-2">
                     {parcels.map((parcel, index) => {
-                        return <Tag key={index} tag={parcel.info} onDelete={this.onDeleteParcel} />;
+                        return <ParcelTag key={index} parcel={parcel} onDelete={this.onDeleteParcel} />;
                     })}
                 </div>
             </Fragment>
         );
     }
 
+    private renderErrorMessage(): React.ReactNode {
+        const message = this.state.error;
+        if (message) {
+            return (
+                <div className="flex items-center text-sm rounded-md my-2 p-2 bg-red-100 text-red-500">
+                    {message}
+                </div>
+            );
+        }
+        return null;
+    }
+
     private onInfoChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        if (this.state.error) {
+            this.setState({error: undefined});
+        }
         this.setState({parcelInfo: event.target.value});
     }
 
@@ -67,10 +84,25 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
     private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
         const parcels = this.state.parcels;
         const trimmedInput = this.state.parcelInfo.trim();
+        if (parcels.find(parcel => parcel.info === trimmedInput)) {
+            this.setState({error: "Package Info exists."});
+            return;
+        }
         if (event.code === "Enter" && trimmedInput.length && !parcels.find(parcel => parcel.info === trimmedInput)) {
             event.preventDefault();
-            const parcel = {info: trimmedInput, remark: this.state.remark, deliverDate: Date().toString(), collected: false};
-            this.setState(prevState => ({parcels: [...prevState.parcels, parcel], parcelInfo: ""}));
+            const parcel = {
+                info: trimmedInput, 
+                remark: this.state.remark, 
+                deliverDate: Date().toString(), 
+                collected: false
+            };
+            this.setState(prevState => 
+                ({
+                    parcels: [...prevState.parcels, parcel], 
+                    parcelInfo: "", 
+                    remark: ""
+                })
+            );
         }
     }
 
