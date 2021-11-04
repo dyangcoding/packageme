@@ -2,6 +2,7 @@ import React from "react";
 import { ParcelProperties } from "../models/parcel";
 import { MailIcon, BellIcon, CalendarIcon, MailOpenIcon, InboxIcon, CheckIcon } from "@heroicons/react/outline";
 import ReactTooltip from "react-tooltip";
+import { collectParcel } from "../app/mongo-client";
 
 interface EntryProps {
     readonly parcel: ParcelProperties;
@@ -37,7 +38,7 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
     private renderDate(): React.ReactNode {
         const date = this.props.parcel.deliverDate;
         return (
-            <div className="flex items-center">
+            <div className="flex items-center space-x-1">
                 <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                 <span className="text-sm">{date}</span>
             </div>
@@ -48,7 +49,7 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
         const remark = this.props.parcel.remark;
         if (remark) {
             return (
-                <div className="flex items-center">
+                <div className="flex items-center space-x-1">
                     <BellIcon className="h-4 w-4" aria-hidden="true" />
                     <span className="text-sm">{remark}</span>
                 </div>
@@ -91,8 +92,13 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
         return null;
     }
 
-    private onCollect(): void {
-
+    private async onCollect(): Promise<void> {
+        const parcel = this.props.parcel;
+        const result = await collectParcel(parcel);
+        // TODO: validate that the parcel has been updated.
+        if (result) {
+            this.setState({collected: true});
+        }
     }
 }
 

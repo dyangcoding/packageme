@@ -9,11 +9,16 @@ export enum ActionType {
 
     ParcelInsertingStartedAction = "Parcel_INSERTING_STARTED",
     ParcelInsertingCompletedAction = "Parcel_INSERTING_COMPLETED",
-    ParcelInsertingFailedAction = "Parcel_INSERTING_FAILED"
+    ParcelInsertingFailedAction = "Parcel_INSERTING_FAILED",
+
+    ParcelUpdatingStartedAction = "Parcel_UPDATING_STARTED",
+    ParcelUpdatingCompletedAction = "Parcel_UPDATING_COMPLETED",
+    ParcelUpdatingFailedAction = "Parcel_UPDATING_FAILED"
 }
 
 export type Action = LoadParcelsStartedAction | LoadParcelsCompletedAction | LoadParcelsFailedAction |
-            ParcelInsertingStartedAction | ParcelInsertingCompletedAction | ParcelInsertingFailedAction;
+            ParcelInsertingStartedAction | ParcelInsertingCompletedAction | ParcelInsertingFailedAction |
+            ParcelUpdatingStartedAction | ParcelUpdatingCompletedAction | ParcelUpdatingFailedAction;
 
 export interface LoadParcelsStartedAction {
     readonly type: ActionType.LoadParcelsStartedAction;
@@ -43,6 +48,20 @@ export interface ParcelInsertingFailedAction {
     readonly error: Error;
 }
 
+export interface ParcelUpdatingStartedAction {
+    readonly type: ActionType.ParcelUpdatingStartedAction;
+}
+
+export interface ParcelUpdatingCompletedAction {
+    readonly type: ActionType.ParcelUpdatingCompletedAction;
+    readonly parcel: ParcelProperties;
+}
+
+export interface ParcelUpdatingFailedAction {
+    readonly type: ActionType.ParcelUpdatingFailedAction;
+    readonly error: Error;
+}
+
 export function loadParcels(): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.LoadParcelsStartedAction});
@@ -57,6 +76,13 @@ export function insertParcel(parcel: ParcelProperties): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.ParcelInsertingStartedAction});
         dispatch({type: ActionType.ParcelInsertingCompletedAction, parcel: parcel});
+    }
+}
+
+export function updateParcel(parcel: ParcelProperties): ThunkAction<Action> {
+    return dispatch => {
+        dispatch({type: ActionType.ParcelUpdatingStartedAction});
+        dispatch({type: ActionType.ParcelUpdatingCompletedAction, parcel: parcel});
     }
 }
 

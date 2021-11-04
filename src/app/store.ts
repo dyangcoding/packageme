@@ -7,7 +7,7 @@ import { parcelReducer } from "../parcel/reducer";
 import { parcelCollection } from "./mongo-client";
 import { toParcelProperties, UpstreamParcelProperties } from "../models/parcel";
 export type ThunkDispatch<A extends Action=Action> = ReduxThunkDispatch<AppState, never, A>
-export type Status = "idle" | "loading" | "inserting" | "deleting" | "completed" | "failed";
+export type Status = "idle" | "loading" | "inserting" | "updating" | "deleting" | "completed" | "failed";
 
 export type AppAction = ParcelsAction;
 
@@ -26,7 +26,7 @@ export type AppDispatch = typeof store.dispatch;
 
 const parcelsPipeline = [
     { 
-      $in: [ "insert" ] 
+      $in: [ "insert", "update" ] 
     }
   ];
   
@@ -34,10 +34,23 @@ const parcelsPipeline = [
     parcelCollection()
     .then(async collection => {
         for await (const parcel of collection.watch(parcelsPipeline)) {
-          const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
-          if (fullDocument) {
-            store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
-            store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: toParcelProperties(fullDocument)});
+          switch (parcel.operationType) {
+            case "insert": {
+              const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
+              if (fullDocument) {
+                store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
+                store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: toParcelProperties(fullDocument)});
+              }
+              break;
+            }
+            case "update": {
+              const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.UpdateEvent<UpstreamParcelProperties>;
+              if (fullDocument) {
+                store.dispatch({type: ParcelsActionType.ParcelUpdatingStartedAction});
+                store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: toParcelProperties(fullDocument)});
+              }
+              break;
+            }
           }
         }
     })

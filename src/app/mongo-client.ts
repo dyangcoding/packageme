@@ -39,4 +39,10 @@ export async function fetchParcels() {
     return collection
         .aggregate(pipeline)
         .then(tweets => tweets as Array<ParcelProperties>);
+export async function collectParcel(parcel: ParcelProperties) {
+    const collection = await parcelCollection();
+    return await collection.updateOne(
+        { info: parcel.info },
+        { $set: {collected: true} }  
+    );
 }
