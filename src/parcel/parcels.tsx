@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchIcon, MailOpenIcon, InboxIcon } from "@heroicons/react/outline";
+import { SearchIcon, CheckIcon, InboxIcon } from "@heroicons/react/outline";
 import { ParcelProperties } from "../models/parcel";
 import { AppState } from "../app/store";
 import { connect } from "react-redux";
@@ -39,7 +39,7 @@ class ParcelListComponent extends React.Component<ParcelListProps> {
                     </span>
                     <span className="flex items-center space-x-2 px-4">
                         <div className="flex items-center p-2 rounded-full cursor-pointer bg-green-100">
-                            <MailOpenIcon className="text-green-500 h-6 w-6" aria-hidden="true" data-tip="Collected Packages" />
+                            <CheckIcon className="text-green-500 h-6 w-6" aria-hidden="true" data-tip="Collected Packages" />
                         </div>
                         <span>{collected.toLocaleString()}</span> 
                     </span>
