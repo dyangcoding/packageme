@@ -29,6 +29,8 @@ class ParcelListComponent extends React.Component<ParcelListProps> {
 
     private renderHeader() {
         const parcels = this.props.parcels;
+        const collected = parcels.filter(parcel => parcel.collected).length;
+        const uncollected = parcels.length - collected;
         return (
             <div className="flex justify-between bg-white my-2 py-4 border-b-2">
                 <div className="flex items-center text-2xl divide-x divide-green-500 space-x-4">
@@ -36,12 +38,16 @@ class ParcelListComponent extends React.Component<ParcelListProps> {
                         Packages in Total: <span className="underline">{parcels.length.toLocaleString()}</span>
                     </span>
                     <span className="flex items-center space-x-2 px-4">
-                        <MailOpenIcon className="text-green-500 h-6 w-6" aria-hidden="true" />
-                        <span>{parcels.filter(parcel => parcel.collected).length.toLocaleString()}</span> 
+                        <div className="flex items-center p-2 rounded-full cursor-pointer bg-green-100">
+                            <MailOpenIcon className="text-green-500 h-6 w-6" aria-hidden="true" data-tip="Collected Packages" />
+                        </div>
+                        <span>{collected.toLocaleString()}</span> 
                     </span>
                     <span className="flex items-center space-x-2 px-4">
-                        <InboxIcon className="text-yellow-500 h-6 w-6" aria-hidden="true" />
-                        <span>{parcels.filter(parcel => !parcel.collected).length.toLocaleString()}</span> 
+                        <div className="flex items-center p-2 rounded-full cursor-pointer bg-yellow-100">
+                            <InboxIcon className="text-yellow-500 h-6 w-6" aria-hidden="true" data-tip="Uncollected Packages" />
+                        </div>
+                        <span>{uncollected.toLocaleString()}</span> 
                     </span>
                 </div>
                 <div className="relative w-1/2">
@@ -49,12 +55,7 @@ class ParcelListComponent extends React.Component<ParcelListProps> {
                         <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h-6 w-6" aria-hidden="true" />
                     </div> 
                     <input type="text" className="h-10 w-full pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
-                        placeholder="Search Name, Apartment number ..." />
-                    <div className="absolute top-1 right-1"> 
-                        <button className="h-7 w-20 text-white rounded-lg bg-red-500 hover:bg-red-600">
-                            Search
-                        </button> 
-                    </div>
+                        placeholder="Search Name/Apartment number..." />
                 </div>
             </div>
         );

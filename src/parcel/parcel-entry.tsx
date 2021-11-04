@@ -84,7 +84,7 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
         if (!status) {
             return (
                 <div className="flex items-center bg-gray-200 cursor-pointer rounded-full p-2" onClick={this.onCollect}>
-                    <CheckIcon className="text-gray-500 h-6 w-6" aria-hidden="true" />
+                    <CheckIcon className="text-gray-500 h-6 w-6" aria-hidden="true" data-tip="collect" />
                 </div>
             );
         }
