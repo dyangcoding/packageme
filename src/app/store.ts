@@ -2,20 +2,23 @@ import { ThunkAction as ReduxThunkAction } from "redux-thunk";
 import { ThunkDispatch as ReduxThunkDispatch } from "redux-thunk";
 import { Action, configureStore } from "@reduxjs/toolkit";
 
+import { Action as UserAction } from "../auth/actions";
 import { Action as ParcelsAction, ActionType as ParcelsActionType } from "../parcel/actions";
+import { userReducer } from "../auth/reducer";
 import { parcelReducer } from "../parcel/reducer";
 import { parcelCollection } from "./mongo-client";
 import { toParcelProperties, UpstreamParcelProperties } from "../models/parcel";
 export type ThunkDispatch<A extends Action=Action> = ReduxThunkDispatch<AppState, never, A>
 export type Status = "idle" | "loading" | "inserting" | "updating" | "deleting" | "completed" | "failed";
 
-export type AppAction = ParcelsAction;
+export type AppAction = UserAction | ParcelsAction;
 
 export type ThunkAction<A extends AppAction, R = void> = ReduxThunkAction<R, AppState, never, A>;
 export type AsyncThunkAction<A extends AppAction = AppAction, R = void> = ThunkAction<A, PromiseLike<R>>;
 
 export const store = configureStore({
   reducer: {
+    users: userReducer,
     parcels: parcelReducer,
   }
 });
