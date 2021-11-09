@@ -3,17 +3,17 @@ import { ThunkAction } from "../app/store";
 import { ParcelProperties } from "../models/parcel";
 
 export enum ActionType {
-    LoadParcelsStartedAction = "LOAD_ParcelS_STARTED",
-    LoadParcelsCompletedAction = "LOAD_ParcelS_COMPLETED",
-    LoadParcelsFailedAction = "LOAD_ParcelS_FAILED",
+    LoadParcelsStartedAction = "LOAD_PARCELS_STARTED",
+    LoadParcelsCompletedAction = "LOAD_PARCELS_COMPLETED",
+    LoadParcelsFailedAction = "LOAD_PARCELS_FAILED",
 
-    ParcelInsertingStartedAction = "Parcel_INSERTING_STARTED",
-    ParcelInsertingCompletedAction = "Parcel_INSERTING_COMPLETED",
-    ParcelInsertingFailedAction = "Parcel_INSERTING_FAILED",
+    ParcelInsertingStartedAction = "PARCEL_INSERTING_STARTED",
+    ParcelInsertingCompletedAction = "PARCEL_INSERTING_COMPLETED",
+    ParcelInsertingFailedAction = "PARCEL_INSERTING_FAILED",
 
-    ParcelUpdatingStartedAction = "Parcel_UPDATING_STARTED",
-    ParcelUpdatingCompletedAction = "Parcel_UPDATING_COMPLETED",
-    ParcelUpdatingFailedAction = "Parcel_UPDATING_FAILED"
+    ParcelUpdatingStartedAction = "PARCEL_UPDATING_STARTED",
+    ParcelUpdatingCompletedAction = "PARCEL_UPDATING_COMPLETED",
+    ParcelUpdatingFailedAction = "PARCEL_UPDATING_FAILED"
 }
 
 export type Action = LoadParcelsStartedAction | LoadParcelsCompletedAction | LoadParcelsFailedAction |
