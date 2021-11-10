@@ -1,4 +1,5 @@
 import { ThunkAction } from "../app/store";
+import { requests } from "../services/ajax";
 
 export enum ActionType {
     AuthenticateUserStartedAction = "AUTHENTICATE_USER_STARTED",
@@ -25,6 +26,9 @@ export interface AuthenticateUserFailedAction {
 export function login(code: string): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.AuthenticateUserStartedAction});
-
+        requests.post("/verify_otp", JSON.stringify({ code })).then(
+            result => dispatch({type: ActionType.AuthenticateUserCompletedAction, authenticated: result}),
+            reason => dispatch({type: ActionType.AuthenticateUserFailedAction, error: reason})
+        )
     }
 }
