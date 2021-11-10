@@ -35,6 +35,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         };
 
         this.onToggleDialog = this.onToggleDialog.bind(this);
+        this.onCodeChange = this.onCodeChange.bind(this);
         this.onLoginClick = this.onLoginClick.bind(this);
     }
 
@@ -151,15 +152,15 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     }
 
     private onCodeChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const code = event.target.value;
-        if (!code.length || code.length !== 6) {
-            this.setState({codeError: "The Code is not validated."});
-            return;
-        }
-        this.setState({code: code});
+        this.setState({code: event.target.value});
     }
 
     private onLoginClick(event: React.MouseEvent<HTMLButtonElement>): void {
+        const code = this.state.code;
+        if (!code.length || Number.isNaN(code) || code.length !== 6) {
+            this.setState({codeError: "The Code should be a six digit number."});
+            return;
+        }
         this.props.login(this.state.code);
     }
 
