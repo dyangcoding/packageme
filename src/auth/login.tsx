@@ -78,8 +78,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
             <div className="relative px-5 py-6 flex-col items-center justify-center">
                 {this.renderIntroduction()}
                 {this.renderAuthenticators()}
-                {this.renderErrorMessage()}
                 {this.renderLoginAction()}
+                {this.renderErrorMessage()}
             </div>
         );
     }
@@ -143,7 +143,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         const message = this.props.error || this.state.codeError;
         if (message) {
             return (
-                <div className="flex items-center text-sm rounded-md my-2 p-2 bg-red-100 text-red-500">
+                <div className="flex items-center text-sm rounded-md mt-2 p-2 bg-red-100 text-red-500">
                     {message}
                 </div>
             );
@@ -152,16 +152,21 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     }
 
     private onCodeChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({code: event.target.value});
+        this.setState({code: event.target.value, codeError: ''});
     }
 
-    private onLoginClick(event: React.MouseEvent<HTMLButtonElement>): void {
+    private async onLoginClick(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
         const code = this.state.code;
         if (!code.length || Number.isNaN(code) || code.length !== 6) {
             this.setState({codeError: "The Code should be a six digit number."});
             return;
         }
-        this.props.login(this.state.code);
+        const authenticated = await this.props.login(this.state.code);
+        if (authenticated) {
+            this.props.onToggleDialog();
+        } else {
+            this.setState({codeError: 'Can not verify the input code, try again.'});
+        }
     }
 
     private onToggleDialog(): void {
