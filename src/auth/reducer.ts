@@ -1,26 +1,33 @@
-import { Status } from "../app/store";
-import { Action, ActionType } from "./actions";
+import { Status } from '../app/store';
+import { getSessionItem } from '../services/storage';
+import { Action, ActionType } from './actions';
 
 interface UserState {
-    readonly authenticated: boolean,
+    readonly sessionID: string,
     readonly loading: Status,
     readonly error: string | undefined,
 };
 
 const initialState: UserState = {
-    authenticated: false,
-    loading: "idle",
+    sessionID: getSessionItem('SID') || '',
+    loading: 'idle',
     error: undefined
 };
 
 export function userReducer(state: UserState = initialState, action: Action): UserState {
     switch (action.type) {
-        case ActionType.AuthenticateUserStartedAction:
-            return {...state, loading: "loading"};
-        case ActionType.AuthenticateUserCompletedAction:
-            return {...state, loading: "completed", authenticated: action.authenticated};
-        case ActionType.AuthenticateUserFailedAction:
-            return {...state, loading: "failed", error: action.error.message};
+        case ActionType.LoginStartedAction:
+            return {...state, loading: 'loading'};
+        case ActionType.LoginCompletedAction:
+            return {...state, loading: 'completed', sessionID: action.sessionID};
+        case ActionType.LoginFailedAction:
+            return {...state, loading: 'failed', error: action.error.message};
+        case ActionType.LogoutStartedAction:
+            return {...state, loading: 'loading'};
+        case ActionType.LogoutCompletedAction:
+            return {...state, loading: 'completed', sessionID: action.sessionID};
+        case ActionType.LogoutFailedAction:
+            return {...state, loading: 'failed', error: action.error.message};
         default:
             return state;
     }

@@ -1,40 +1,70 @@
-import { AsyncThunkAction } from "../app/store";
+import { AsyncThunkAction, ThunkAction } from "../app/store";
 import { requests } from "../services/ajax";
+import { Logout } from "../services/storage";
 
 export enum ActionType {
-    AuthenticateUserStartedAction = "AUTHENTICATE_USER_STARTED",
-    AuthenticateUserCompletedAction = "AUTHENTICATE_USER_COMPLETED",
-    AuthenticateUserFailedAction = "AUTHENTICATE_USER_FAILED",
+    LoginStartedAction = "LOGIN_STARTED",
+    LoginCompletedAction = "LOGIN_COMPLETED",
+    LoginFailedAction = "LOGIN_FAILED",
+
+    LogoutStartedAction = "LOGOUT_STARTED",
+    LogoutCompletedAction = "LOGOUT_COMPLETED",
+    LogoutFailedAction = "LOGOUT_FAILED",
 }
 
-export type Action = AuthenticateUserStartedAction | AuthenticateUserCompletedAction | AuthenticateUserFailedAction;
+export type Action = LoginStartedAction | LoginCompletedAction | LoginFailedAction
+    | LogoutStartedAction | LogoutCompletedAction | LogoutFailedAction;
 
-export interface AuthenticateUserStartedAction {
-    readonly type: ActionType.AuthenticateUserStartedAction;
+export interface LoginStartedAction {
+    readonly type: ActionType.LoginStartedAction;
 }
 
-export interface AuthenticateUserCompletedAction {
-    readonly type: ActionType.AuthenticateUserCompletedAction;
-    readonly authenticated: boolean;
+export interface LoginCompletedAction {
+    readonly type: ActionType.LoginCompletedAction;
+    readonly sessionID: string;
 }
 
-export interface AuthenticateUserFailedAction {
-    readonly type: ActionType.AuthenticateUserFailedAction;
+export interface LoginFailedAction {
+    readonly type: ActionType.LoginFailedAction;
     readonly error: Error;
 }
 
-export function login(code: string): AsyncThunkAction<Action, boolean> {
+export interface LogoutStartedAction {
+    readonly type: ActionType.LogoutStartedAction;
+}
+
+export interface LogoutCompletedAction {
+    readonly type: ActionType.LogoutCompletedAction;
+    readonly sessionID: string;
+}
+
+export interface LogoutFailedAction {
+    readonly type: ActionType.LogoutFailedAction;
+    readonly error: Error;
+}
+
+export function login(code: string): AsyncThunkAction<Action, string> {
     return dispatch => {
-        dispatch({type: ActionType.AuthenticateUserStartedAction});
+        dispatch({type: ActionType.LoginStartedAction});
         return requests.post("/verify_otp", JSON.stringify({ code })).then(
             result => {
-                dispatch({type: ActionType.AuthenticateUserCompletedAction, authenticated: result});
-                return result;
+                dispatch({type: ActionType.LoginCompletedAction, sessionID: result.sessionID});
+                return result.sessionID;
             },
             reason => {
-                dispatch({type: ActionType.AuthenticateUserFailedAction, error: reason});
+                dispatch({type: ActionType.LoginFailedAction, error: reason});
                 throw reason;
-            } 
-        )
+            }
+        );
+    }
+}
+
+export function logout(): ThunkAction<Action> {
+    return dispatch => {
+        dispatch({type: ActionType.LogoutStartedAction});
+        Logout().then(
+            () => dispatch({type: ActionType.LogoutCompletedAction, sessionID: ''}),
+            reason => dispatch({type: ActionType.LogoutFailedAction, error: reason})
+        );
     }
 }

@@ -1,5 +1,6 @@
 import * as Realm from "realm-web";
 import { ParcelProperties, UpstreamParcelProperties } from "../models/parcel";
+import { UpstreamSessionProperties } from "../models/session";
 
 /*
 Modify Mongo Collection Output using Aggregation Pipelines
@@ -34,11 +35,40 @@ export async function parcelCollection() {
         .collection<UpstreamParcelProperties>("parcels");
 }
 
+export async function sessionCollection() {
+    const mongoDb = await getMongoDB();
+    return mongoDb
+        .db("findMyPackages")
+        .collection<UpstreamSessionProperties>("sessions");
+}
+
 export async function fetchParcels() {
     const collection = await parcelCollection();
     return collection
         .aggregate(pipeline)
         .then(tweets => tweets as Array<ParcelProperties>);
+}
+
+export async function deleteSession(sessionID: string) {
+    const collection = await sessionCollection();
+    return collection.deleteOne({ "_id": sessionID } );
+}
+
+export async function insertParcels(parcels: ReadonlyArray<ParcelProperties>) {
+    const collection = await parcelCollection();
+    const documents = [];
+    for (const parcel of parcels) {
+        const document = {
+            deliverDate: parcel.deliverDate,
+            info: parcel.info,
+            remark: parcel.remark,
+            collected: parcel.collected
+        };
+        documents.push(document);
+    }
+    return await collection.insertMany(documents);
+}
+
 export async function collectParcel(parcel: ParcelProperties) {
     const collection = await parcelCollection();
     return await collection.updateOne(
