@@ -42,7 +42,7 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
             <Fragment>
                 <div className="flex-col rounded-md shadow-sm">
                     <input type="text" name="parcel-info" id="parcel-info" value={info || ""} onChange={this.onInfoChange} onKeyDown={this.onInfoKeyDown}
-                        placeholder="22xxxx your package is arrived." ref={this.infoInput}
+                        placeholder="22xxxx your package is here (Press 'Enter' to add)" ref={this.infoInput}
                         className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
                 <div className=" my-1 text-sm">
@@ -50,7 +50,7 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
                 </div>
                 <div className="">
                     <input type="text" name="remark" id="remark" value={remark || ""} onChange={this.onRemarkChange} onKeyDown={this.onRemarkKeyDown}
-                            placeholder="Pick up at 22xxx1."
+                            placeholder="Pick up at 22xxx1 (Press 'Enter' to add)"
                             className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
                 {this.renderErrorMessage()}
@@ -135,7 +135,8 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
                 parcels: [...prevState.parcels, this.buildParcel()], 
                 parcelInfo: "", 
                 remark: ""
-            })
+            }),
+            () => this.props.onParcelsChange(this.state.parcels)
         );
     }
 

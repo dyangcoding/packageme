@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from './home/header';
 import Introduction from './home/Introduction';
 import ImageToText from './home/imageToText';
 import Footer from './home/footer';
 import { ParcelList } from './parcel/parcels';
 import './App.css';
+import { Header } from './home/header';
 
 function App() {
   return (

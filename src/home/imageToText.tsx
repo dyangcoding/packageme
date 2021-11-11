@@ -7,12 +7,13 @@ import Spinner from "../components/Spinner";
 import ParcelInput from "../components/ParcelInput";
 import { ParcelProperties } from "../models/parcel";
 import * as INFO from "../utils/stringUtils";
+import { insertParcels } from "../app/mongo-client";
 
 interface ImageToTextProps {}
 
 interface ImageToTextState {
     readonly images: ReadonlyArray<File>;
-    readonly text: string;
+    readonly ocrtext: string;
     readonly processing: boolean;
     readonly parcels: ReadonlyArray<ParcelProperties>;
     readonly checked: boolean;
@@ -24,14 +25,14 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
         super(props);
         this.state = {
             images: [],
-            text: "",
+            ocrtext: "",
             processing: false,
             parcels: [] as ParcelProperties[],
             checked: false,
-        }
+        };
         this.onFileChange = this.onFileChange.bind(this);
         this.onParcelsChange = this.onParcelsChange.bind(this);
-        this.onTermOfServiceChange = this.onTermOfServiceChange.bind(this);
+        this.onTermOfUseChange = this.onTermOfUseChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
@@ -50,7 +51,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
             result += text;
         }
         await worker.terminate();
-        this.setState(prevState => ({processing: false, text: prevState.text + result}));
+        this.setState(prevState => ({processing: false, ocrtext: prevState.ocrtext + result}));
     }
 
     public render() {
@@ -104,7 +105,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <Tooltip id="ocr-text" title="Optical character recongnition" description={INFO.ocrTextInfo} />
                 </div>
                 <div className="mt-2">
-                    <textarea id="ocr-text" name="ocr-text" rows={19} value={this.state.text} readOnly
+                    <textarea id="ocr-text" name="ocr-text" rows={19} value={this.state.ocrtext} readOnly
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"/>
                 </div>
             </div>
@@ -154,10 +155,10 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
         return (
             <div className="upload my-2">
                 <div className="flex items-center my-2">
-                    <input id="term-of-service" name="term-of-service" type="checkbox" onChange={this.onTermOfServiceChange}
+                    <input id="term-of-use" name="term-of-use" type="checkbox" onChange={this.onTermOfUseChange}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
-                    <label htmlFor="term-of-service" className="ml-1 block text-xs text-gray-800">
-                        You are agree with the Terms of Service.
+                    <label htmlFor="term-of-use" className="ml-1 block text-xs text-gray-800">
+                        You are agree with the Terms of Use.
                     </label>
                 </div>
                 <button type="submit" onClick={this.onSubmit}
@@ -169,19 +170,23 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
     }
 
     private onParcelsChange(parcels: ReadonlyArray<ParcelProperties>): void {
-        this.setState({parcels: parcels});
+        this.setState({parcels: parcels}, () => console.log(this.state.parcels));
     }
 
-    private onTermOfServiceChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({checked: event.target.checked});
+    private onTermOfUseChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        this.setState({checked: event.target.checked, error: ""});
     }
 
     private onSubmit(): void {
-        // submit all tags
+        if (!this.state.parcels.length) {
+            this.setState({error: "No Package Info was added."});
+            return;
+        }
         if (!this.state.checked) {
             this.setState({error: "Please agree with the Terms of Service."});
             return;
         }
+        insertParcels(this.state.parcels).then(result => console.log(result));
     }
 }
 
