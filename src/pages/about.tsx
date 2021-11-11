@@ -1,0 +1,64 @@
+import React from "react";
+import about from "../about.png";
+import AccordionItem from "../components/accordionItem";
+import { faqs } from "../utils/faq";
+
+class About extends React.Component {
+    public render(): React.ReactNode {
+        return (
+            <div className="flex flex-col">
+                {this.renderHeader()}
+                <div className="bg-gray-50 py-6">
+                    {this.renderFAQ()}
+                </div>
+            </div>
+        );
+    }
+
+    private renderHeader(): React.ReactNode {
+        return (
+            <div className="flex items-center container mx-auto max-w-6xl justify-center py-6">
+                <div className="flex items-center justify-center w-1/2">
+                    <img className="object-scale-down object-center rounded-lg h-96" src={about} />
+                </div>
+                <div className="flex-col my-8 p-8 w-1/2">
+                    <div className="text-3xl font-extrabold tracking-tight">
+                        Help finding packages.
+                    </div>
+                    <div className="text-2xl font-bold tracking-relaxed mb-2">
+                        For you, the neighbors, us all.
+                    </div>
+                    <div className="text-base">
+                        Whether you are looking for the delivered Packages or just have received packages
+                        for the neighbors. 
+                        findMyPackages.de tracks all the Packages for you.
+                    </div>
+                    <div className="mt-4">
+                        <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                            Get started
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    private renderFAQ(): React.ReactNode {
+        return (
+            <div className="flex flex-col container mx-auto max-w-6xl justify-center mb-4">
+                <div className="flex items-center justify-center text-2xl font-bold my-4">
+                    Frequently Asked Questions
+                </div>
+                {faqs.map((item, index) => {
+                    return (
+                        <AccordionItem key={index} title={item.title}>
+                            {item.text}
+                        </AccordionItem>
+                    );
+                })}
+            </div>
+        );
+    }
+}
+
+export default About;
