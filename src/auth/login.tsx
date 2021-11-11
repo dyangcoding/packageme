@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { AppState } from "../app/store";
 import { XIcon, QrcodeIcon, InformationCircleIcon } from "@heroicons/react/outline";
 import { login } from "./actions";
+import { setSessionID } from "../services/storage";
 
 interface OwnProps {
     readonly onToggleDialog: () => void;
@@ -11,11 +12,11 @@ interface OwnProps {
 interface StateProps {
     readonly isLoading: string;
     readonly error: string | undefined;
-    readonly authenticated: boolean;
+    readonly sessionID: string;
 }
 
 interface DispatchProps {
-    readonly login: (code: string) => PromiseLike<boolean>;
+    readonly login: (code: string) => PromiseLike<string>;
 }
 
 interface LoginProps extends OwnProps, StateProps, DispatchProps {}
@@ -161,9 +162,10 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
             this.setState({codeError: "The Code should be a six digit number."});
             return;
         }
-        const authenticated = await this.props.login(this.state.code);
-        if (authenticated) {
+        const sessionID = await this.props.login(this.state.code);
+        if (sessionID) {
             this.props.onToggleDialog();
+            setSessionID(sessionID);
         } else {
             this.setState({codeError: 'Can not verify the input code, try again.'});
         }
@@ -178,7 +180,7 @@ function mapStateToProps(state: AppState): StateProps {
     return {
         isLoading: state.users.loading,
         error: state.users.error,
-        authenticated: state.users.authenticated
+        sessionID: state.users.sessionID,
     };
 }
 

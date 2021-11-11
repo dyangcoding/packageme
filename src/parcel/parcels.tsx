@@ -11,7 +11,7 @@ interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;
     readonly isLoading: string;
     readonly error: string | undefined;
-    readonly authenticated: boolean;
+    readonly sessionID: string;
 }
 
 interface DispatchProps {
@@ -44,7 +44,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         const parcels = this.props.parcels;
         const collected = parcels.filter(parcel => parcel.collected).length;
         const uncollected = parcels.length - collected;
-        const authenticated = this.props.authenticated;
+        const authenticated = this.props.sessionID;
         clazzName += authenticated ? " justify-between border-b-2" : " justify-center";
         return (
             <div className={clazzName}>
@@ -71,7 +71,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     }
 
     public render(): React.ReactNode {
-        const authenticated = this.props.authenticated;
+        const authenticated = this.props.sessionID;
         return (
             <Fragment>
                 <div className="container mx-auto max-w-6xl p-4 my-4">
@@ -129,7 +129,7 @@ function mapStateToProps(state: AppState): StateProps {
         parcels: state.parcels.value,
         isLoading: state.parcels.loading,
         error: state.parcels.error,
-        authenticated: state.users.authenticated
+        sessionID: state.users.sessionID,
     };
 }
 
