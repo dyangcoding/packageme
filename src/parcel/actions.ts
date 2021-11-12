@@ -1,5 +1,5 @@
-import { fetchParcels } from "../app/mongo-client";
-import { ThunkAction } from "../app/store";
+import { fetchParcels, filterParcels } from "../app/mongo-client";
+import { AsyncThunkAction, ThunkAction } from "../app/store";
 import { ParcelProperties } from "../models/parcel";
 
 export enum ActionType {
@@ -13,12 +13,17 @@ export enum ActionType {
 
     ParcelUpdatingStartedAction = "PARCEL_UPDATING_STARTED",
     ParcelUpdatingCompletedAction = "PARCEL_UPDATING_COMPLETED",
-    ParcelUpdatingFailedAction = "PARCEL_UPDATING_FAILED"
+    ParcelUpdatingFailedAction = "PARCEL_UPDATING_FAILED",
+
+    SearchParcelsStartedAction = "SEARCH_PARCELS_STARTED",
+    SearchParcelsCompletedAction = "SEARCH_PARCELS_COMPLETED",
+    SearchParcelsFailedAction = "SEARCH_PARCELS_FAILED"
 }
 
 export type Action = LoadParcelsStartedAction | LoadParcelsCompletedAction | LoadParcelsFailedAction |
             ParcelInsertingStartedAction | ParcelInsertingCompletedAction | ParcelInsertingFailedAction |
-            ParcelUpdatingStartedAction | ParcelUpdatingCompletedAction | ParcelUpdatingFailedAction;
+            ParcelUpdatingStartedAction | ParcelUpdatingCompletedAction | ParcelUpdatingFailedAction |
+            SearchParcelsStartedAction | SearchParcelsCompletedAction | SearchParcelsFailedAction;
 
 export interface LoadParcelsStartedAction {
     readonly type: ActionType.LoadParcelsStartedAction;
@@ -62,6 +67,20 @@ export interface ParcelUpdatingFailedAction {
     readonly error: Error;
 }
 
+export interface SearchParcelsStartedAction {
+    readonly type: ActionType.SearchParcelsStartedAction;
+}
+
+export interface SearchParcelsCompletedAction {
+    readonly type: ActionType.SearchParcelsCompletedAction;
+    readonly parcels: ReadonlyArray<ParcelProperties>;
+}
+
+export interface SearchParcelsFailedAction {
+    readonly type: ActionType.SearchParcelsFailedAction;
+    readonly error: Error;
+}
+
 export function loadParcels(): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.LoadParcelsStartedAction});
@@ -83,6 +102,22 @@ export function updateParcel(parcel: ParcelProperties): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.ParcelUpdatingStartedAction});
         dispatch({type: ActionType.ParcelUpdatingCompletedAction, parcel: parcel});
+    }
+}
+
+export function searchParcels(searchTerm: string): AsyncThunkAction<Action, ReadonlyArray<ParcelProperties>> {
+    return dispatch => {
+        dispatch({type: ActionType.SearchParcelsStartedAction});
+        return filterParcels(searchTerm).then(
+            results => {
+                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: results});
+                return results;
+            }, 
+            reason => {
+                dispatch({type: ActionType.SearchParcelsFailedAction, error: reason});
+                throw reason;
+            } 
+        );
     }
 }
 

@@ -49,6 +49,18 @@ export async function fetchParcels() {
         .then(tweets => tweets as Array<ParcelProperties>);
 }
 
+export async function filterParcels(searchTerm: string) {
+    const collection = await parcelCollection();
+    const reg = { "$regex": new Realm.BSON.BSONRegExp(searchTerm) };
+    const query = {
+        "$or": [
+            { "info": reg},
+            { "remark": reg}
+        ]
+    };
+    return collection.find(query);
+}
+
 export async function deleteSession(sessionID: string) {
     const collection = await sessionCollection();
     return collection.deleteOne({ "_id": sessionID } );

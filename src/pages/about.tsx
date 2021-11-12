@@ -26,17 +26,12 @@ class About extends React.Component {
                         Help finding packages.
                     </div>
                     <div className="text-2xl font-bold tracking-relaxed mb-2">
-                        For you, the neighbors, us all.
+                        Form the community, for the community.
                     </div>
                     <div className="text-base">
                         Whether you are looking for the delivered Packages or just have received packages
                         for the neighbors. 
-                        findMyPackages.de tracks all the Packages for you.
-                    </div>
-                    <div className="mt-4">
-                        <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                            Get started
-                        </button>
+                        Packageme.eu tracks all the Packages for you.
                     </div>
                 </div>
             </div>

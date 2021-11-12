@@ -1,11 +1,12 @@
 import React, { Fragment } from "react";
-import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon } from "@heroicons/react/outline";
+import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon, EmojiSadIcon } from "@heroicons/react/outline";
 import { ParcelProperties } from "../models/parcel";
 import { AppState } from "../app/store";
 import { connect } from "react-redux";
-import { loadParcels } from "./actions";
+import { loadParcels, searchParcels } from "./actions";
 import ParcelEntry from "./parcel-entry";
 import { Login } from "../auth/login";
+import empty from "../void.png";
 
 interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;
@@ -16,9 +17,11 @@ interface StateProps {
 
 interface DispatchProps {
     readonly onLoad: () => void;
+    readonly onSearchInput: (searchTerm: string) => ReadonlyArray<ParcelProperties>;
 }
 
 interface ParcelListState {
+    readonly searchTerm?: string;
     readonly shown: boolean;
 }
 
@@ -33,6 +36,8 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         }
 
         this.onToggleLogin = this.onToggleLogin.bind(this);
+        this.onSearchInput = this.onSearchInput.bind(this);
+        this.onSearchClick = this.onSearchClick.bind(this);
     }
 
     public componentDidMount(): void {
@@ -91,20 +96,43 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
                 <div className="absolute top-2 left-2"> 
                     <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h-6 w-6" aria-hidden="true" />
                 </div> 
-                <input type="text" className="border border-solid border-indigo-200 h-10 w-full pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
-                    placeholder="Search Name/Apartment number..." />
+                <input type="text" className="border border-solid border-gray-200 h-10 w-full pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
+                    placeholder="Search Name/Apartment number..." onChange={this.onSearchInput} />
+                <div className="absolute top-1.5 right-1"> 
+                    <button className="h-7 w-20 text-white rounded-lg bg-red-500 hover:bg-red-600" onClick={this.onSearchClick}>
+                        Search
+                    </button> 
+                </div>
             </div>
         );
     }
 
     private renderParcels(): React.ReactNode {
         const parcels = this.props.parcels;
+        if (!parcels.length) {
+            return this.renderEmptyResults();
+        }
         return (
-            <Fragment>
+            <div className="">
                 {parcels.map((parcel, index) => {
                     return <ParcelEntry key={index} parcel={parcel} />;
                 })}
-            </Fragment>
+            </div>
+        );
+    }
+
+    private renderEmptyResults(): React.ReactNode {
+        let message = '';
+        if (this.state.searchTerm) {
+            message = 'Oops, No Packages found for the Search, try later on.';
+        } else {
+            message = 'No Packages exist. Help neighbours finding packages by uploading package informations.';
+        }
+        return (
+            <div className="flex flex-col items-center justify-center">
+                <img className="object-scale-down object-center rounded-lg h-40 my-4" src={empty} />
+                <div>{message}</div>
+            </div>
         );
     }
 
@@ -125,6 +153,23 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     private onToggleLogin(): void {
         this.setState(prevState => ({shown: !prevState.shown}));
     }
+
+    private onSearchInput(event: React.ChangeEvent<HTMLInputElement>): void {
+        const searchTerm = event.target.value;
+        if (!searchTerm) {
+            this.props.onLoad();
+            return;
+        }
+        this.setState({searchTerm: event.target.value});
+    }
+
+    private onSearchClick(event: React.MouseEvent<HTMLButtonElement>): void {
+        const searchTerm = this.state.searchTerm;
+        if (!searchTerm) {
+            return;
+        }
+        this.props.onSearchInput(searchTerm);
+    }
 }
 
 function mapStateToProps(state: AppState): StateProps {
@@ -138,7 +183,8 @@ function mapStateToProps(state: AppState): StateProps {
 
 function mapDispatchToProps(dispatch: any): DispatchProps {
     return {
-        onLoad: () => dispatch(loadParcels())
+        onLoad: () => dispatch(loadParcels()),
+        onSearchInput: (searchTerm: string) => dispatch(searchParcels(searchTerm)),
     }
 }
 

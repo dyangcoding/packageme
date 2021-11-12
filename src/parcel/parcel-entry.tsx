@@ -20,10 +20,10 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
     public render(): React.ReactNode {
         const parcel = this.props.parcel;
         return (
-            <div className="grid grid-cols-12 gap-1 items-center py-2 rounded-md justify-between even:bg-gray-100">
+            <div className="grid grid-cols-12 gap-1 items-center py-4 rounded-md justify-between even:bg-gray-100">
                 <div className="col-span-5">
                     <div className="flex items-center space-x-2">
-                        <MailIcon className="text-yellow-400 h-12 w-12" aria-hidden="true" />
+                        <MailIcon className="text-yellow-400 h-10 w-10" aria-hidden="true" />
                         <div className="flex-col">
                             <span className="text-base font-medium">{parcel.info}</span>
                             {this.renderDate()}

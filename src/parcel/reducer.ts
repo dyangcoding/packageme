@@ -37,6 +37,12 @@ export function parcelReducer(state: ParcelState = initialState, action: Action)
             return {...state, loading: "completed", value: result};
         case ActionType.ParcelUpdatingFailedAction:
             return {...state, loading: "failed", error: action.error.message};
+        case ActionType.SearchParcelsStartedAction:
+            return {...state, loading: "loading"};
+        case ActionType.SearchParcelsCompletedAction:
+            return {...state, loading: "completed", value: action.parcels};
+        case ActionType.SearchParcelsFailedAction:
+            return {...state, loading: "failed", error: action.error.message};
         default:
             return state;
     }

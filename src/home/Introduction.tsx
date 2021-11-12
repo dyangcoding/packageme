@@ -13,11 +13,11 @@ class Introduction extends React.Component {
                         Help finding packages.
                     </div>
                     <div className="text-2xl font-bold tracking-relaxed mb-2">
-                        For you, the neighbors, us all.
+                        For you, the neighbours, us all.
                     </div>
                     <div className="text-base">
                         Whether you are looking for the delivered Packages or just have received packages
-                        for the neighbors. 
+                        for the neighbours. 
                         <a href="/" className="border-b-4 border-indigo-600 px-1 text-base">Packageme.eu</a>tracks all the Packages for you.
                     </div>
                     <div className="mt-4">
