@@ -1,8 +1,11 @@
 import React from "react"
-import { XIcon, PlusIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 
 interface ItemProps {
     readonly title: string;
+    readonly titleTextColor?: string;
+    readonly borderColor?: string;
+    readonly textColor?: string;
 }
 
 interface ItemState {
@@ -27,22 +30,22 @@ class AccordionItem extends React.PureComponent<ItemProps, ItemState> {
         const toggled = this.state.isToggled;
         return (
             <div className="p-2">
-                <div className="border rounded-md border-white p-2 bg-gray-100" onClick={this.handleClick}>
+                <div className="border rounded-md border-gray-600 p-2 bg-gray-100" onClick={this.handleClick}>
                     <div className="flex justify-between items-center p-2">
-                        <div className="lead">{this.props.title}</div> 
+                        <div className="">{this.props.title}</div> 
                         {
                             toggled 
                                 ? 
-                            <XIcon className="cursor-pointer text-red-800 hover:text-red-900 h-5 w-5" aria-hidden="true" />
+                            <ChevronUpIcon className="cursor-pointer h-5 w-5" aria-hidden="true" />
                                 :
-                            <PlusIcon className="cursor-pointer text-red-800 hover:text-red-900 h-5 w-5" aria-hidden="true" />
+                            <ChevronDownIcon className="cursor-pointer h-5 w-5" aria-hidden="true" />
                         }
                     </div>
                 </div>
                 {
                     this.state.isToggled 
                         && 
-                    <div className="text-lg text-left my-2 pl-4 py-2">
+                    <div className="text-lg my-2 pl-4 py-2">
                         {this.props.children}
                     </div>
                 }
