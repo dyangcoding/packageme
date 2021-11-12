@@ -56,7 +56,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     public render() {
         return (
-            <div className="container mx-auto max-w-6xl flex space-x-4 bg-gray-100">
+            <div className="container mx-auto max-w-6xl flex space-x-4 bg-gray-100 py-2">
                 {this.pickImage()}
                 {this.renderText()}
                 {this.renderParcelInfos()}

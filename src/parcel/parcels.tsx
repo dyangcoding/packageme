@@ -91,7 +91,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
                 <div className="absolute top-2 left-2"> 
                     <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h-6 w-6" aria-hidden="true" />
                 </div> 
-                <input type="text" className="h-10 w-full pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
+                <input type="text" className="border border-solid border-indigo-200 h-10 w-full pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
                     placeholder="Search Name/Apartment number..." />
             </div>
         );
@@ -113,7 +113,10 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
             <div className="flex items-center justify-center border-dotted border-2 h-60">
                 <div className="flex items-center text-xl space-x-2">
                     <UserCircleIcon className="text-green-500 h-6 w-6" aria-hidden="true" />
-                    <span className="cursor-pointer underline" onClick={this.onToggleLogin}>Login </span> to check the Packages Infomations.
+                    <div>
+                        <span className="cursor-pointer underline mr-1" onClick={this.onToggleLogin}>Login</span> 
+                        to view the Packages Informations.
+                    </div>
                 </div> 
             </div>
         );
