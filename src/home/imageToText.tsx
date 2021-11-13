@@ -56,7 +56,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     public render() {
         return (
-            <div className="container mx-auto max-w-6xl flex space-x-4 bg-gray-100 py-2">
+            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row md:space-x-4 bg-gray-100 py-2">
                 {this.pickImage()}
                 {this.renderText()}
                 {this.renderParcelInfos()}
@@ -66,21 +66,21 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private pickImage() {
         return (
-            <div className="container w-1/3 my-4 p-4">
+            <div className="container w-full md:w-1/3 md:my-4 p-5">
                 <div className="flex items-center space-x-1">
                     <div className="font-medium text-gray-700">
                         Pick Image
                     </div>
                     <Tooltip id="image-picker" title="Pick Images" description={INFO.imagePickerInfo} />
                 </div>
-                <div className="flex justify-center items-center h-96 mt-2 border-dashed border-4 rounded-md">
+                <div className="flex justify-center items-center h-60 md:h-96 mt-2 border-dashed border-4 rounded-md">
                     {this.state.processing
                         ?
                         <Spinner />
                         :
                         <div className="flex-col">
                             <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange} >
-                                <CloudUploadIcon className="cursor-pointer h-12 w-12" aria-hidden="true" />
+                                <CloudUploadIcon className="cursor-pointer h-8 w-8 md:h-12 md:w-12" aria-hidden="true" />
                             </ImagePicker>
                             <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange}>
                                 <a className="underline" href="#">Browse</a>
@@ -97,7 +97,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private renderText() {
         return (
-            <div className="container w-1/3 flex-col my-4 p-4">
+            <div className="container w-full md:w-1/3 flex-col md:my-4 p-5">
                 <div className="flex items-center space-x-1">
                     <div className="font-medium text-gray-700">
                         OCR Text
@@ -106,7 +106,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                 </div>
                 <div className="mt-2">
                     <textarea id="ocr-text" name="ocr-text" rows={19} value={this.state.ocrtext} readOnly
-                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"/>
+                    className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-2 block w-full text-sm border border-gray-300 rounded-md"/>
                 </div>
             </div>
         );
@@ -114,7 +114,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private renderParcelInfos() {
         return (
-            <div className="container w-1/3 flex-col my-4 p-4 overflow-y-auto h-112">
+            <div className="container w-full md:w-1/3 flex flex-col md:my-4 p-5 overflow-y-auto md:h-112">
                 {this.renderInputSection()}
                 {this.renderErrorMessage()}
                 {this.renderUploadAction()}

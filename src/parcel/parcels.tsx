@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { loadParcels, searchParcels } from "./actions";
 import ParcelEntry from "./parcel-entry";
 import { Login } from "../auth/login";
-import empty from "../void.png";
+import empty from "../imgs/void.png";
 
 interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;
@@ -45,7 +45,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     }
 
     private renderHeader() {
-        let clazzName = "flex bg-white my-2 py-4";
+        let clazzName = "flex flex-col md:flex-row bg-white my-2 md:py-4";
         const parcels = this.props.parcels;
         const collected = parcels.filter(parcel => parcel.collected).length;
         const uncollected = parcels.length - collected;
@@ -53,19 +53,19 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         clazzName += authenticated ? " justify-between border-b-2" : " justify-center";
         return (
             <div className={clazzName}>
-                <div className="flex items-center text-2xl divide-x divide-green-500 space-x-4">
+                <div className="flex items-center text-lg md:text-2xl md:divide-x md:divide-green-500 space-x-4">
                     <span className="px-2">
                         Packages in Total: <span className="underline">{parcels.length.toLocaleString()}</span>
                     </span>
-                    <span className="flex items-center space-x-2 px-4">
+                    <span className="flex items-center space-x-2 md:px-4">
                         <div className="flex items-center p-2 rounded-full cursor-pointer bg-green-100">
-                            <CheckIcon className="text-green-500 h-6 w-6" aria-hidden="true" data-tip="Collected Packages" />
+                            <CheckIcon className="text-green-500 h-4 w-4 md:h-6 md:w-6" aria-hidden="true" data-tip="Collected Packages" />
                         </div>
                         <span>{collected.toLocaleString()}</span> 
                     </span>
-                    <span className="flex items-center space-x-2 px-4">
+                    <span className="flex items-center space-x-2 md:px-4">
                         <div className="flex items-center p-2 rounded-full cursor-pointer bg-yellow-100">
-                            <InboxIcon className="text-yellow-500 h-6 w-6" aria-hidden="true" data-tip="Uncollected Packages" />
+                            <InboxIcon className="text-yellow-500 h-4 w-4 md:h-6 md:w-6" aria-hidden="true" data-tip="Uncollected Packages" />
                         </div>
                         <span>{uncollected.toLocaleString()}</span> 
                     </span>
@@ -92,14 +92,14 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
 
     private renderSearchInput(): React.ReactNode {
         return (
-            <div className="relative w-1/2">
+            <div className="relative w-full md:w-1/2 my-4">
                 <div className="absolute top-2 left-2"> 
                     <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h-6 w-6" aria-hidden="true" />
                 </div> 
-                <input type="text" className="border border-solid border-gray-200 h-10 w-full pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
+                <input type="text" className="border border-solid border-gray-200 h-10 w-full pl-8 md:pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
                     placeholder="Search Name/Apartment number..." onChange={this.onSearchInput} />
                 <div className="absolute top-1.5 right-1"> 
-                    <button className="h-7 w-20 text-white rounded-lg bg-red-500 hover:bg-red-600" onClick={this.onSearchClick}>
+                    <button className="h-7 w-16 md:w-20 text-white rounded-lg bg-red-500 hover:bg-red-600" onClick={this.onSearchClick}>
                         Search
                     </button> 
                 </div>
@@ -124,7 +124,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     private renderEmptyResults(): React.ReactNode {
         let message = '';
         if (this.state.searchTerm) {
-            message = 'Oops, No Packages found for the Search, try later on.';
+            message = 'Oops, No Packages found for the Search, try something else.';
         } else {
             message = 'No Packages exist. Help neighbours finding packages by uploading package informations.';
         }
@@ -139,7 +139,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     private renderLogin(): React.ReactNode {
         return (
             <div className="flex items-center justify-center border-dotted border-2 h-60">
-                <div className="flex items-center text-xl space-x-2">
+                <div className="flex flex-col md:flex-row items-center justify-center text-base md:text-xl space-x-2">
                     <UserCircleIcon className="text-green-500 h-6 w-6" aria-hidden="true" />
                     <div>
                         <span className="cursor-pointer underline mr-1" onClick={this.onToggleLogin}>Login</span> 

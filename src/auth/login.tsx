@@ -43,8 +43,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     public render(): React.ReactNode {
         return (
             <Fragment> 
-                <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                    <div className="relative w-1/4 my-6 mx-auto max-w-3xl">
+                <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-auto mx-auto">
+                    <div className="relative w-full md:w-1/4 my-6 mx-auto max-w-3xl">
                         {this.renderDialog()}        
                     </div>
                 </div>
@@ -65,8 +65,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderHeader(): React.ReactNode {
         return (
-            <div className="flex items-center justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-2xl font-semibold">
+            <div className="flex items-center justify-between p-3 md:p-5 border-b border-solid rounded-t">
+                <h3 className="text-xl md:text-2xl font-semibold">
                     Login
                 </h3>
                 <XIcon className="cursor-pointer text-red-500 h-6 w-6" aria-hidden="true" onClick={this.onToggleDialog} />
@@ -76,7 +76,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderMain(): React.ReactNode {
         return (
-            <div className="relative px-5 py-6 flex-col items-center justify-center">
+            <div className="relative px-3 md:px-5 py-4 md:py-6 flex-col items-center justify-center">
                 {this.renderIntroduction()}
                 {this.renderAuthenticators()}
                 {this.renderLoginAction()}
@@ -88,7 +88,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     private renderIntroduction(): React.ReactNode {
         return (
             <div className="flex justify-center items-center space-x-2">
-                <p className="text-lg leading-relaxed">
+                <p className="text-base md:text-lg leading-4">
                     Scan the QR-Code you received to Login. using one of the following Authenticators.
                 </p>
             </div>
@@ -97,8 +97,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderAuthenticators(): React.ReactNode {
         return (
-            <div className="flex justify-around items-center my-2">
-                <QrcodeIcon className="text-gray-500 h-24 w-24" aria-hidden="true" />
+            <div className="flex justify-around items-center my-4 md:my-2">
+                <QrcodeIcon className="text-gray-500 h16 w-16 md:h-24 md:w-24" aria-hidden="true" />
                 <div className="flex flex-col space-y-1">
                     <a className="block text-sm cursor-pointer underline" 
                         href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
@@ -133,8 +133,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderFooter(): React.ReactNode {
         return (
-            <div className="flex items-center justify-start p-5 border-t border-solid border-blueGray-200 rounded-b space-x-2">
-                <InformationCircleIcon className="text-gray-500 h-4 w-4" aria-hidden="true" />
+            <div className="flex items-center justify-start p-2 md:p-5 border-t border-solid border-blueGray-200 rounded-b space-x-2">
+                <InformationCircleIcon className="flex-none text-gray-500 h-4 w-4" aria-hidden="true" />
                 <div className="text-sm text-gray-500">By Login You are agreed with the Terms of Use.</div>
             </div>
         );

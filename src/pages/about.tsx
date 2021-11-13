@@ -1,5 +1,5 @@
 import React from "react";
-import about from "../about.png";
+import about from "../imgs/about.png";
 import AccordionItem from "../components/accordionItem";
 import { faqs } from "../utils/faq";
 
@@ -17,11 +17,11 @@ class About extends React.Component {
 
     private renderHeader(): React.ReactNode {
         return (
-            <div className="flex items-center container mx-auto max-w-6xl justify-center py-6">
-                <div className="flex items-center justify-center w-1/2">
+            <div className="flex flex-col md:flex-row items-center container mx-auto max-w-6xl justify-center py-6">
+                <div className="flex items-center justify-center w-full md:w-1/2">
                     <img className="object-scale-down object-center rounded-lg h-96" src={about} />
                 </div>
-                <div className="flex-col my-8 p-8 w-1/2">
+                <div className="flex-col my-8 p-8 w-full md:w-1/2">
                     <div className="text-3xl font-extrabold tracking-tight">
                         Help finding packages.
                     </div>
@@ -44,13 +44,16 @@ class About extends React.Component {
                 <div className="flex items-center justify-center text-2xl font-bold my-4">
                     Frequently Asked Questions
                 </div>
-                {faqs.map((item, index) => {
-                    return (
-                        <AccordionItem key={index} title={item.title}>
-                            {item.text}
-                        </AccordionItem>
-                    );
-                })}
+                <div className="p-5">
+                    {faqs.map((item, index) => {
+                        return (
+                            <AccordionItem key={index} title={item.title}>
+                                {item.text}
+                            </AccordionItem>
+                        );
+                    })}
+                </div>
+                
             </div>
         );
     }

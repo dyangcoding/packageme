@@ -1,14 +1,14 @@
 import React from "react";
-import intro from "../intro.png";
+import intro from "../imgs/intro.png";
 
 class Introduction extends React.Component {
     public render(): React.ReactNode {
         return (
-            <div className="container mx-auto max-w-6xl flex py-6 justify-center">
-                <div className="flex items-center justify-center w-1/2">
+            <div className="container mx-auto sm:max-w-6xl flex flex-col md:flex-row py-4 md:py-6 justify-center">
+                <div className="flex items-center justify-center w-full sm:w-1/2">
                     <img className="object-scale-down object-center rounded-lg h-96" src={intro} />
                 </div>
-                <div className="flex-col my-8 p-8 w-1/2">
+                <div className="flex-col my-8 p-8 w-full sm:w-1/2">
                     <div className="text-3xl font-extrabold tracking-tight">
                         Help finding packages.
                     </div>

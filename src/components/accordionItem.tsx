@@ -32,20 +32,20 @@ class AccordionItem extends React.PureComponent<ItemProps, ItemState> {
             <div className="p-2">
                 <div className="border rounded-md border-gray-600 p-2 bg-gray-100" onClick={this.handleClick}>
                     <div className="flex justify-between items-center p-2">
-                        <div className="">{this.props.title}</div> 
+                        <div className="leading-4">{this.props.title}</div> 
                         {
                             toggled 
                                 ? 
-                            <ChevronUpIcon className="cursor-pointer h-5 w-5" aria-hidden="true" />
+                            <ChevronUpIcon className="flex-none cursor-pointer h-5 w-5" aria-hidden="true" />
                                 :
-                            <ChevronDownIcon className="cursor-pointer h-5 w-5" aria-hidden="true" />
+                            <ChevronDownIcon className="flex-none cursor-pointer h-5 w-5" aria-hidden="true" />
                         }
                     </div>
                 </div>
                 {
                     this.state.isToggled 
                         && 
-                    <div className="text-lg my-2 pl-4 py-2">
+                    <div className="text-lg leading-5 my-2 pl-4 py-2">
                         {this.props.children}
                     </div>
                 }
