@@ -3,6 +3,7 @@ import { ParcelProperties } from "../models/parcel";
 import { MailIcon, ChatAltIcon, CalendarIcon, CheckIcon } from "@heroicons/react/outline";
 import ReactTooltip from "react-tooltip";
 import { collectParcel } from "../app/mongo-client";
+import moment from "moment";
 
 interface EntryProps {
     readonly parcel: ParcelProperties;
@@ -42,11 +43,12 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
     }
 
     private renderDate(): React.ReactNode {
-        const date = this.props.parcel.deliverDate;
+        const utcDate = this.props.parcel.deliverDate;
+        const localDate = moment(utcDate).local().format("LLLL");
         return (
             <div className="flex items-center space-x-1">
                 <CalendarIcon className="flex-none h-4 w-4" aria-hidden="true" />
-                <span className="text-sm text-gray-500">{date}</span>
+                <span className="text-sm text-gray-500">{localDate}</span>
             </div>
         );
     }

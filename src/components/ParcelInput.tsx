@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { ParcelProperties } from "../models/parcel";
 import ParcelTag from "./ParcelTag";
+import moment from "moment";
 
 interface ParcelProps {
     readonly onParcelsChange: (parcels: ReadonlyArray<ParcelProperties>) => void;
@@ -124,7 +125,7 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
         return {
             info: this.state.parcelInfo.trim(), 
             remark: this.state.remark, 
-            deliverDate: Date().toString(), 
+            deliverDate: moment.utc().format(), 
             collected: false
         } as ParcelProperties;
     }
