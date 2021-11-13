@@ -1,65 +1,59 @@
 import React, { Fragment } from "react";
 import { ParcelProperties } from "../models/parcel";
-import ParcelTag from "./ParcelTag";
+import * as INFO from "../utils/stringUtils";
 import moment from "moment";
+import Tooltip from "./tooltip-wrapper";
+import { insertParcels } from "../app/mongo-client";
 
-interface ParcelProps {
-    readonly onParcelsChange: (parcels: ReadonlyArray<ParcelProperties>) => void;
-}
+interface ParcelProps {}
 
 interface ParcelState {
-    readonly parcelInfo: string;
+    readonly info: string;
     readonly remark: string;
-    readonly parcels: ParcelProperties[];
+    readonly checked: boolean;
     readonly error?: string;
 }
 
 class ParcelInput extends React.Component<ParcelProps, ParcelState> {
-    private infoInput: React.RefObject<HTMLInputElement>;
-
     constructor(props: ParcelProps) {
         super(props);
 
         this.state = {
-            parcelInfo: "",
+            info: "",
             remark: "",
-            parcels: [] as ParcelProperties[],
-        }
-
-        this.infoInput = React.createRef();
+            checked: false,
+        };
 
         this.onInfoChange = this.onInfoChange.bind(this);
         this.onRemarkChange = this.onRemarkChange.bind(this);
-        this.onInfoKeyDown = this.onInfoKeyDown.bind(this);
-        this.onRemarkKeyDown = this.onRemarkKeyDown.bind(this);
-        this.onDeleteParcel = this.onDeleteParcel.bind(this);
+        this.onTermOfUseChange = this.onTermOfUseChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     public render(): React.ReactNode {
-        const info = this.state.parcelInfo;
+        const info = this.state.info;
         const remark = this.state.remark;
-        const parcels = this.state.parcels;
         return (
             <Fragment>
-                <div className="flex-col rounded-md shadow-sm">
-                    <input type="text" name="parcel-info" id="parcel-info" value={info || ""} onChange={this.onInfoChange} onKeyDown={this.onInfoKeyDown}
-                        placeholder="22xxxx your package is here (Press 'Enter' to add)" ref={this.infoInput}
+                <div className="flex items-center space-x-1">
+                    <div className="font-medium text-gray-700">
+                        Package Infos
+                    </div>
+                    <Tooltip id="package-info" title="Package Information" description={INFO.parcelInfo} />
+                </div>
+                <div className="flex-col rounded-md shadow-sm my-2">
+                    <input type="text" name="parcel-info" id="parcel-info" value={info || ""} onChange={this.onInfoChange} placeholder="22xxxx your package is here"
                         className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
-                <div className=" my-1 text-sm">
+                <div className="my-1 text-base">
                     Remark
                 </div>
                 <div className="">
-                    <input type="text" name="remark" id="remark" value={remark || ""} onChange={this.onRemarkChange} onKeyDown={this.onRemarkKeyDown}
-                            placeholder="Pick up at 22xxx1 (Press 'Enter' to add)"
-                            className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
+                    <input type="text" name="remark" id="remark" value={remark || ""} onChange={this.onRemarkChange} placeholder="Pick up at 22xxx1"
+                        className="h-10 px-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"/>
                 </div>
                 {this.renderErrorMessage()}
-                <div className="flex-col space-y-2 mt-2">
-                    {parcels.map((parcel, index) => {
-                        return <ParcelTag key={index} parcel={parcel} onDelete={this.onDeleteParcel} />;
-                    })}
-                </div>
+                {this.renderUploadAction()}
             </Fragment>
         );
     }
@@ -76,77 +70,73 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
         return null;
     }
 
+    private renderUploadAction(): React.ReactNode {
+        return (
+            <div className="mt-2">
+                <div className="flex items-center my-2">
+                    <input id="term-of-use" name="term-of-use" type="checkbox" onChange={this.onTermOfUseChange}
+                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
+                    <label htmlFor="term-of-use" className="ml-2 block text-sm text-gray-500">
+                        You are agree with the Terms of Use.
+                    </label>
+                </div>
+                <button type="submit" onClick={this.onSubmit}
+                    className="flex py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Upload
+                </button>
+            </div>
+        );
+    }
+
     private onInfoChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        if (this.state.error) {
-            this.setState({error: undefined});
-        }
-        this.setState({parcelInfo: event.target.value});
+        this.clear();
+        this.setState({info: event.target.value});
     }
 
     private onRemarkChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        this.clear();
         this.setState({remark: event.target.value});
     }
 
-    private onInfoKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
-        const parcels = this.state.parcels;
-        const trimmedInfo = this.state.parcelInfo.trim();
-        if (parcels.find(parcel => parcel.info === trimmedInfo)) {
-            this.setState({error: "Package Info exists already."});
+    private clear(): void {
+        if (this.state.error) {
+            this.setState({error: ''});
+        }
+    }
+
+    private onTermOfUseChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        this.setState({checked: event.target.checked, error: ""});
+    }
+
+    private onSubmit(): void {
+        if (!this.state.info) {
+            this.setState({error: "Package Info can not be empty."});
             return;
         }
-        if (event.code === "Enter" && this.validate()) {
-            event.preventDefault();
-            this.handleChange();
+        if (!this.state.remark) {
+            this.setState({error: "Remark can not be empty."});
+            return;
         }
+        if (!this.state.checked) {
+            this.setState({error: "Please agree with the Terms of Service."});
+            return;
+        }
+        insertParcels([this.buildParcel()])
+            .then(() => this.reset())
+            .catch(error => this.setState({error: error}));
     }
 
-    private onRemarkKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
-        if (event.code === "Enter") {
-            const trimmedInfo = this.state.parcelInfo.trim();
-            if (!trimmedInfo.length) {
-                this.setState({error: "Package Info can not be empty."});
-                return;
-            }
-            if (this.validate()) {
-                event.preventDefault();
-                this.handleChange();
-                this.infoInput.current?.focus();
-            }
-        }
-    }
-
-    private validate(): boolean {
-        const info = this.state.parcelInfo.trim();
-        const parcels = this.state.parcels;
-        return info.length > 0 && !parcels.find(parcel => parcel.info === info);
+    private reset(): void {
+        this.setState({info: '', remark: '', checked: false});
     }
 
     private buildParcel(): ParcelProperties {
         return {
-            info: this.state.parcelInfo.trim(), 
+            info: this.state.info.trim(), 
             remark: this.state.remark, 
             deliverDate: moment.utc().format(), 
             collected: false
         } as ParcelProperties;
-    }
-
-    private handleChange(): void {
-        this.setState(prevState => 
-            ({
-                parcels: [...prevState.parcels, this.buildParcel()], 
-                parcelInfo: "", 
-                remark: ""
-            }),
-            () => this.props.onParcelsChange(this.state.parcels)
-        );
-    }
-
-    private onDeleteParcel(parcelInfo: string): void {
-        const parcels = this.state.parcels;
-        if (parcels.find(parcel => parcel.info === parcelInfo)) {
-            const removed = parcels.filter(parcel => parcel.info !== parcelInfo);
-            this.setState({parcels: removed});
-        }
     }
 }
 
