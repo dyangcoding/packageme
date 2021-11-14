@@ -19,7 +19,8 @@ class About extends React.Component {
         return (
             <div className="flex flex-col md:flex-row items-center container mx-auto max-w-6xl justify-center py-6">
                 <div className="flex items-center justify-center w-full md:w-1/2">
-                    <img className="object-scale-down object-center rounded-lg h-96" src={about} />
+                    <img className="object-scale-down object-center rounded-lg h-96" src={about} 
+                        alt="team introduction for about page" />
                 </div>
                 <div className="flex-col my-8 p-8 w-full md:w-1/2">
                     <div className="text-3xl font-extrabold tracking-tight">

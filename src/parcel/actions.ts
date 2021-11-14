@@ -91,6 +91,7 @@ export function loadParcels(): ThunkAction<Action> {
     }
 }
 
+// TODO: fire proper actions based on the response of Reaml update results
 export function insertParcel(parcel: ParcelProperties): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.ParcelInsertingStartedAction});

@@ -81,7 +81,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <CloudUploadIcon className="cursor-pointer h-8 w-8 md:h-12 md:w-12" aria-hidden="true" />
                 </ImagePicker>
                 <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange}>
-                    <a className="underline" href="#">Browse</a>
+                    <button className="underline">Browse</button>
                 </ImagePicker>
                 <div className="flex justify-center items-center my-2 px-2 leading-5">
                     JEPG, PNG, WebP up to 50 mb
