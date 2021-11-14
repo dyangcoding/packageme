@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon, EmojiSadIcon } from "@heroicons/react/outline";
+import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { ParcelProperties } from "../models/parcel";
 import { AppState } from "../app/store";
 import { connect } from "react-redux";
@@ -92,14 +92,14 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
 
     private renderSearchInput(): React.ReactNode {
         return (
-            <div className="relative w-full md:w-1/2 my-4">
-                <div className="absolute top-2 left-2"> 
-                    <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h-6 w-6" aria-hidden="true" />
+            <div className="relative w-full md:w-1/2 my-6 md:my-2">
+                <div className="absolute top-3 md:top-2 left-2"> 
+                    <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h4 w-4 md:h-6 md:w-6" aria-hidden="true" />
                 </div> 
-                <input type="text" className="border border-solid border-gray-200 h-10 w-full pl-8 md:pl-12 pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none" 
-                    placeholder="Search Name/Apartment number..." onChange={this.onSearchInput} />
+                <input type="text" className="border border-solid border-gray-200 h-10 w-full pl-8 md:pl-12 pr-18 md:pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none text-sm md:text-base" 
+                    placeholder="Search Name/Apartment number" onChange={this.onSearchInput} />
                 <div className="absolute top-1.5 right-1"> 
-                    <button className="h-7 w-16 md:w-20 text-white rounded-lg bg-red-500 hover:bg-red-600" onClick={this.onSearchClick}>
+                    <button className="h-7 w-14 md:w-20 text-white rounded-lg bg-red-500 hover:bg-red-600 text-sm" onClick={this.onSearchClick}>
                         Search
                     </button> 
                 </div>

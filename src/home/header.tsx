@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter as Router, NavLink, Route, Switch } from "react-router-dom";
+import { MenuIcon } from "@heroicons/react/outline";
 import { AppState } from "../app/store";
 import { logout } from "../auth/actions";
 import { Login } from "../auth/login";
@@ -61,8 +62,8 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                     <div className="container px-4 mx-auto md:flex md:items-center">
                         <div className="flex justify-between items-center">
                             <NavLink to="/" className="font-bold text-2xl text-indigo-600">Packageme.eu</NavLink>
-                            <button className="border border-solid border-gray-600 px-3 py-1 rounded text-gray-600 opacity-50 hover:opacity-75 md:hidden" id="navbar-toggle">
-                                <i className="fas fa-bars"></i>
+                            <button className="px-2 py-1 hover:opacity-75 md:hidden" id="navbar-toggle">
+                                <MenuIcon className="text-black cursor-pointer h-6 w-6" aria-hidden="true" />
                             </button>
                         </div>
                         <div className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">

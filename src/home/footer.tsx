@@ -3,9 +3,16 @@ import React from "react";
 class Footer extends React.PureComponent {
     render() {
         return (
-            <div className="container mx-auto max-w-6xl flex justify-center items-center h-24 border-t">
-                <div className="container flex items-center justify-center">
-                    <p className="p-2 text-sm">© 2021 Copyright Packageme.eu</p>
+            <div className="container mx-auto max-w-6xl flex justify-center items-center h-28 border-t py-4">
+                <div className="container flex flex-col md:flex-row items-center justify-between m-4">
+                    <div className="text-sm text-gray-500">
+                        © 2021 Copyright Packageme.eu
+                    </div>
+                    <div className="flex text-sm text-blue-400 py-2 md:py-0">
+                        <a href="" className="px-2">Terms Of Use</a>
+                        <a href="" className="px-2">Privacy</a>
+                        <a href="" className="pl-2">Help</a>
+                    </div>
                 </div>
             </div>
         );

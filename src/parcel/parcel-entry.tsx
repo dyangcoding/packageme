@@ -21,10 +21,10 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
     public render(): React.ReactNode {
         const parcel = this.props.parcel;
         return (
-            <div className="flex flex-col md:grid md:grid-cols-12 md:gap-1 md:items-center py-4 rounded-md md:justify-between border md:border-none my-4 p-2 md:even:bg-gray-50">
+            <div className="flex flex-col md:grid md:grid-cols-12 md:gap-2 md:items-center py-4 rounded-md md:justify-between border md:border-none my-4 p-2 md:even:bg-gray-50">
                 <div className="md:col-span-5">
                     <div className="flex items-center space-x-2">
-                        <MailIcon className="hidden md:flex text-yellow-400 h-10 w-10" aria-hidden="true" />
+                        <MailIcon className="hidden md:flex flex-none text-yellow-400 h-10 w-10" aria-hidden="true" />
                         <div className="flex-col">
                             <span className="text-lg font-medium leading-4">{parcel.info}</span>
                             {this.renderDate()}
