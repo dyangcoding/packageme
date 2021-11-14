@@ -6,7 +6,8 @@ class Introduction extends React.Component {
         return (
             <div className="container mx-auto sm:max-w-6xl flex flex-col md:flex-row py-4 md:py-6 justify-center">
                 <div className="flex items-center justify-center w-full sm:w-1/2">
-                    <img className="object-scale-down object-center rounded-lg h-96" src={intro} />
+                    <img className="object-scale-down object-center rounded-lg h-96" src={intro} 
+                        alt="packages delivery for home page introduction" />
                 </div>
                 <div className="flex-col my-8 p-8 w-full sm:w-1/2">
                     <div className="text-3xl font-extrabold tracking-tight">

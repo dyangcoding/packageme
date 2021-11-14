@@ -126,11 +126,12 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         if (this.state.searchTerm) {
             message = 'Oops, No Packages found for the Search, try something else.';
         } else {
-            message = 'No Packages exist. Help neighbours finding packages by uploading package informations.';
+            message = 'There are no Packages being uploaded. Help neighbours finding packages by uploading package informations.';
         }
         return (
             <div className="flex flex-col items-center justify-center">
-                <img className="object-scale-down object-center rounded-lg h-40 my-4" src={empty} />
+                <img className="object-scale-down object-center rounded-lg h-40 my-4" src={empty} 
+                    alt="No results for the action" />
                 <div>{message}</div>
             </div>
         );
