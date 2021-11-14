@@ -1,28 +1,34 @@
 import React, { Fragment } from "react";
 import { ParcelProperties } from "../models/parcel";
-import * as INFO from "../utils/stringUtils";
+import * as INFO from "../utils/string-utils";
 import moment from "moment";
 import Tooltip from "./tooltip-wrapper";
-import { insertParcels } from "../app/mongo-client";
+import { AppState } from "../app/store";
+import { insertParcel } from "../parcel/actions";
+import { connect } from "react-redux";
 
-interface ParcelProps {}
+interface OwnProps {
+    readonly insertionError: string;
+}
+
+interface DispatchProps {
+    readonly onInsertParcel: (parcel: ParcelProperties) => PromiseLike<void>;
+}
+
+interface ParcelProps extends OwnProps, DispatchProps {}
 
 interface ParcelState {
     readonly info: string;
     readonly remark: string;
     readonly checked: boolean;
-    readonly error?: string;
+    readonly inputError?: string;
 }
 
-class ParcelInput extends React.Component<ParcelProps, ParcelState> {
+class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
     constructor(props: ParcelProps) {
         super(props);
 
-        this.state = {
-            info: "",
-            remark: "",
-            checked: false,
-        };
+        this.state = { info: "", remark: "", checked: false };
 
         this.onInfoChange = this.onInfoChange.bind(this);
         this.onRemarkChange = this.onRemarkChange.bind(this);
@@ -59,7 +65,7 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
     }
 
     private renderErrorMessage(): React.ReactNode {
-        const message = this.state.error;
+        const message = this.props.insertionError || this.state.inputError;
         if (message) {
             return (
                 <div className="flex items-center text-sm rounded-md my-2 p-2 bg-red-100 text-red-500">
@@ -99,31 +105,29 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
     }
 
     private clear(): void {
-        if (this.state.error) {
-            this.setState({error: ''});
+        if (this.state.inputError) {
+            this.setState({inputError: ''});
         }
     }
 
     private onTermOfUseChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({checked: event.target.checked, error: ""});
+        this.setState({checked: event.target.checked, inputError: ""});
     }
 
     private onSubmit(): void {
+        let error = '';
         if (!this.state.info) {
-            this.setState({error: "Package Info can not be empty."});
+            error = 'Package Info can not be empty.';
+        } else if (!this.state.remark) {
+            error = 'Remark can not be empty.';
+        } else if (!this.state.checked) {
+            error = 'Please agree with the Terms of Service.';
+        }
+        if (error) {
+            this.setState({inputError: error});
             return;
         }
-        if (!this.state.remark) {
-            this.setState({error: "Remark can not be empty."});
-            return;
-        }
-        if (!this.state.checked) {
-            this.setState({error: "Please agree with the Terms of Service."});
-            return;
-        }
-        insertParcels([this.buildParcel()])
-            .then(() => this.reset())
-            .catch(error => this.setState({error: error}));
+        this.props.onInsertParcel(this.buildParcel()).then(() => this.reset());
     }
 
     private reset(): void {
@@ -140,4 +144,16 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
     }
 }
 
-export default ParcelInput;
+function mapStateToProps(state: AppState): OwnProps {
+    return {
+        insertionError: state.parcels.error || '',
+    };
+}
+
+function mapDispatchToProps(dispatch: any): DispatchProps {
+    return {
+        onInsertParcel: (parcel: ParcelProperties) => dispatch(insertParcel(parcel)),
+    }
+}
+
+export const ParcelInput = connect(mapStateToProps, mapDispatchToProps)(ParcelInputComponent);

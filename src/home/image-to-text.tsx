@@ -1,11 +1,11 @@
 import React from "react";
-import ImagePicker from "../components/ImagePicker";
+import ImagePicker from "../components/image-picker";
 import { CloudUploadIcon } from "@heroicons/react/outline";
 import { createWorker } from "tesseract.js";
 import Tooltip from "../components/tooltip-wrapper";
-import Spinner from "../components/Spinner";
-import ParcelInput from "../components/ParcelInput";
-import * as INFO from "../utils/stringUtils";
+import * as INFO from "../utils/string-utils";
+import { ParcelInput } from "../components/parcel-input";
+import Spinner from "../components/spinner";
 
 interface ImageToTextProps {}
 
@@ -83,7 +83,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                 <ImagePicker clazz="flex justify-center items-center" extensions={["image/*"]} onChange={this.onFileChange}>
                     <a className="underline" href="#">Browse</a>
                 </ImagePicker>
-                <div className="flex justify-center items-center my-2 px-2">
+                <div className="flex justify-center items-center my-2 px-2 leading-5">
                     JEPG, PNG, WebP up to 50 mb
                 </div>
             </div>
