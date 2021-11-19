@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { BrowserRouter as Router, NavLink, Route, Switch } from "react-router-dom";
-import { MenuIcon } from "@heroicons/react/outline";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { AppState } from "../app/store";
 import { logout } from "../auth/actions";
 import { Login } from "../auth/login";
@@ -21,6 +21,7 @@ interface DispatchProps {
 interface HeaderProps extends StateProps, DispatchProps {}
 
 interface HeaderState {
+    readonly menuToggled: boolean;
     readonly dialogToggled: boolean;
 }
 
@@ -29,20 +30,28 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
         super(props);
 
         this.state = {
+            menuToggled: false,
             dialogToggled: false,
         };
 
+        this.onToggleMenu = this.onToggleMenu.bind(this);
         this.onToggleDialog = this.onToggleDialog.bind(this);
         this.onLoginClick = this.onLoginClick.bind(this);
         this.onLogoutClick = this.onLogoutClick.bind(this);
     }
 
     public render(): React.ReactNode {
+        const toggleMenu = this.state.menuToggled;
         return (
             <Router>
-                <div className="container mx-auto max-w-6xl">
-                    {this.renderNavbar()}
-                </div>
+                {toggleMenu 
+                    ?
+                    this.renderMenu()
+                    :
+                    <div className="container mx-auto max-w-6xl">
+                        {this.renderNavbar()}
+                    </div>
+                }
                 <Switch>
                     <Route exact path="/">
                         <Home />
@@ -55,6 +64,31 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
         );
     }
 
+    private renderMenu(): React.ReactNode {
+        return (
+            <div className="h-screen">
+                <div className="flex flex-col overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 items-center justify-center">
+                    <div className="ml-auto m-8 bg-white rounded-full" onClick={this.onToggleMenu}>
+                        <XIcon className="text-black cursor-pointer h-10 w-10 p-2" aria-hidden="true" />
+                    </div>
+                    <div className="md:hidden flex flex-col text-2xl text-white mt-8 items-center justify-center" id="navbar-collapse">
+                        <NavLink exact to="/" className="p-2" onClick={this.onToggleMenu}>
+                            Home
+                        </NavLink>
+                        <NavLink to="/about" className="p-2" onClick={this.onToggleMenu}>
+                            About
+                        </NavLink>
+                        <button onClick={this.onContactClick} className="p-2">
+                            Contact
+                        </button>
+                        {this.renderAction()}  
+                    </div>
+                </div>
+                <div className="opacity-95 fixed inset-0 z-40 bg-gradient-to-br from-green-400 to-blue-500"></div>
+            </div>
+        );
+    }
+
     private renderNavbar(): React.ReactNode {
         return (
             <Fragment>
@@ -64,7 +98,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                             <NavLink to="/" className="font-bold text-2xl text-indigo-600 capitalize">
                                 {process.env.REACT_APP_SITE_NAME}
                             </NavLink>
-                            <button className="px-2 py-1 hover:opacity-75 md:hidden" id="navbar-toggle">
+                            <button className="px-2 py-1 hover:opacity-75 md:hidden" id="navbar-toggle" onClick={this.onToggleMenu}>
                                 <MenuIcon className="text-black cursor-pointer h-6 w-6" aria-hidden="true" />
                             </button>
                         </div>
@@ -116,7 +150,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
         )
     }
 
-    private onContactClick(event: React.MouseEvent<HTMLButtonElement>): void {
+    private onContactClick(_event: React.MouseEvent<HTMLButtonElement>): void {
         const email = 'hello.packageme@gmail.com';
         const subject = 'Questions regarding packageme';
         document.location = 'mailto:' + email + '?subject=' + subject;
@@ -124,12 +158,17 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
 
     private onLoginClick(event: React.MouseEvent<HTMLButtonElement>): void {
         event.preventDefault();
-        this.setState({dialogToggled: true});
+        this.setState({dialogToggled: true, menuToggled: false});
     }
 
     private onLogoutClick(event: React.MouseEvent<HTMLButtonElement>): void {
         event.preventDefault();
+        this.setState({menuToggled: false});
         this.props.logout();
+    }
+
+    private onToggleMenu(): void {
+        this.setState(prevState => ({menuToggled: !prevState.menuToggled}));
     }
 
     private onToggleDialog(): void {
