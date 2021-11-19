@@ -61,7 +61,9 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                 <nav className="bg-white py-2 md:py-4">
                     <div className="container px-4 mx-auto md:flex md:items-center">
                         <div className="flex justify-between items-center">
-                            <NavLink to="/" className="font-bold text-2xl text-indigo-600">Packageme.eu</NavLink>
+                            <NavLink to="/" className="font-bold text-2xl text-indigo-600 capitalize">
+                                {process.env.REACT_APP_SITE_NAME}
+                            </NavLink>
                             <button className="px-2 py-1 hover:opacity-75 md:hidden" id="navbar-toggle">
                                 <MenuIcon className="text-black cursor-pointer h-6 w-6" aria-hidden="true" />
                             </button>
@@ -115,8 +117,8 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     }
 
     private onContactClick(event: React.MouseEvent<HTMLButtonElement>): void {
-        const email = 'hello@packageme.eu';
-        const subject = 'Questions regarding packageme.eu';
+        const email = 'hello.packageme@gmail.com';
+        const subject = 'Questions regarding packageme';
         document.location = 'mailto:' + email + '?subject=' + subject;
     }
 

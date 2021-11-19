@@ -32,7 +32,7 @@ class About extends React.Component {
                     <div className="text-base">
                         Whether you are looking for the delivered Packages or just have received packages
                         for the neighbors. 
-                        Packageme.eu tracks all the Packages for you.
+                        <a href="/" className="capitalize ml-1 border-b-4 border-indigo-600">{process.env.REACT_APP_SITE_NAME}</a> tracks all the Packages for you.
                     </div>
                 </div>
             </div>
