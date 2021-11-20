@@ -43,7 +43,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
             <Fragment>
                 <div className="flex items-center space-x-1">
                     <div className="font-medium text-gray-700">
-                        Package Infos
+                        3. Package Infos
                     </div>
                     <Tooltip id="package-info" title="Package Information" description={INFO.parcelInfo} />
                 </div>
