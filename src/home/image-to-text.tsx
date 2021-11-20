@@ -57,7 +57,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private renderImagePicker() {
         return (
-            <div className="container w-full md:w-1/3 p-5">
+            <div className="container w-full md:w-1/3 p-5 mx-auto">
                 <div className="flex items-center space-x-1">
                     <div className="font-medium text-gray-700">
                         1. Pick Image
@@ -92,7 +92,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private renderOcrText() {
         return (
-            <div className="container w-full md:w-1/3 flex-col p-5">
+            <div className="container w-full md:w-1/3 flex-col p-5 mx-auto">
                 <div className="flex items-center space-x-1">
                     <div className="font-medium text-gray-700">
                         2. OCR Text
@@ -109,7 +109,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     private renderParcelInput() {
         return (
-            <div className="container w-full md:w-1/3 flex flex-col p-5 overflow-y-auto md:h-112">
+            <div className="container w-full md:w-1/3 flex flex-col p-5 overflow-y-auto md:h-112 mx-auto">
                 <ParcelInput />
             </div>
         );

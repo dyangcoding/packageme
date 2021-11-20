@@ -17,11 +17,11 @@ class Introduction extends React.Component {
     private renderIntroduction(): React.ReactNode {
         return (
             <div className="container mx-auto sm:max-w-6xl flex flex-col md:flex-row py-6 md:py-8 lg:py-12 justify-left md:bg-hero-pattern md:bg-contain md:bg-no-repeat md:bg-right">
-                <div className="flex md:hidden items-center justify-center w-full sm:w-1/2">
+                <div className="flex md:hidden items-center justify-center w-full">
                     <img className="object-scale-down object-center rounded-lg h-96" src={deliveries} 
                         alt="packages delivery for home page introduction" />
                 </div>
-                <div className="flex-col my-4 md:my-8 p-6 md:p-8 w-full sm:w-1/2">
+                <div className="flex-col my-4 md:my-8 p-6 md:p-8 w-full">
                     <div className="text-3xl md:text-5xl font-extrabold tracking-tight">
                         Help finding packages.
                     </div>
