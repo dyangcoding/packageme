@@ -1,11 +1,11 @@
-import React from "react";
-import ImagePicker from "../components/image-picker";
-import { CloudUploadIcon } from "@heroicons/react/outline";
-import { createWorker } from "tesseract.js";
-import Tooltip from "../components/tooltip-wrapper";
-import * as INFO from "../utils/string-utils";
-import { ParcelInput } from "../components/parcel-input";
-import Spinner from "../components/spinner";
+import React from 'react';
+import ImagePicker from '../components/image-picker';
+import { CloudUploadIcon } from '@heroicons/react/outline';
+import { createWorker } from 'tesseract.js';
+import Tooltip from '../components/tooltip-wrapper';
+import * as INFO from '../utils/string-utils';
+import { ParcelInput } from '../components/parcel-input';
+import Spinner from '../components/spinner';
 
 interface ImageToTextProps {}
 
@@ -47,7 +47,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     public render() {
         return (
-            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row md:space-x-4 py-4 md:py-8 lg:py-12">
+            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row md:space-x-4 p-2 md:p-5">
                 {this.renderImagePicker()}
                 {this.renderOcrText()}
                 {this.renderParcelInput()}

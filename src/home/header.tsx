@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
-import { connect } from "react-redux";
-import { BrowserRouter as Router, NavLink, Route, Switch } from "react-router-dom";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { AppState } from "../app/store";
-import { logout } from "../auth/actions";
-import { Login } from "../auth/login";
-import About from "../pages/about";
-import Home from "../pages/home";
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { BrowserRouter as Router, NavLink, Route, Switch } from 'react-router-dom';
+import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import { AppState } from '../app/store';
+import { logout } from '../auth/actions';
+import { Login } from '../auth/login';
+import About from '../pages/about';
+import Home from '../pages/home';
 
 interface StateProps {
     readonly sessionID: string;
@@ -92,8 +92,8 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     private renderNavbar(): React.ReactNode {
         return (
             <Fragment>
-                <nav className="bg-white py-2 md:py-4">
-                    <div className="container px-4 mx-auto md:flex md:items-center">
+                <nav>
+                    <div className="container p-5 mx-auto md:flex md:items-center">
                         <div className="flex justify-between items-center">
                             <NavLink to="/" className="font-bold text-2xl text-indigo-600 capitalize">
                                 {process.env.REACT_APP_SITE_NAME}

@@ -1,23 +1,23 @@
-import { fetchParcels, filterParcels } from "../app/mongo-client";
-import { AsyncThunkAction, ThunkAction } from "../app/store";
-import { ParcelProperties } from "../models/parcel";
+import { fetchParcels, filterParcels } from '../app/mongo-client';
+import { AsyncThunkAction, ThunkAction } from '../app/store';
+import { ParcelProperties } from '../models/parcel';
 
 export enum ActionType {
-    LoadParcelsStartedAction = "LOAD_PARCELS_STARTED",
-    LoadParcelsCompletedAction = "LOAD_PARCELS_COMPLETED",
-    LoadParcelsFailedAction = "LOAD_PARCELS_FAILED",
+    LoadParcelsStartedAction = 'LOAD_PARCELS_STARTED',
+    LoadParcelsCompletedAction = 'LOAD_PARCELS_COMPLETED',
+    LoadParcelsFailedAction = 'LOAD_PARCELS_FAILED',
 
-    ParcelInsertingStartedAction = "PARCEL_INSERTING_STARTED",
-    ParcelInsertingCompletedAction = "PARCEL_INSERTING_COMPLETED",
-    ParcelInsertingFailedAction = "PARCEL_INSERTING_FAILED",
+    ParcelInsertingStartedAction = 'PARCEL_INSERTING_STARTED',
+    ParcelInsertingCompletedAction = 'PARCEL_INSERTING_COMPLETED',
+    ParcelInsertingFailedAction = 'PARCEL_INSERTING_FAILED',
 
-    ParcelUpdatingStartedAction = "PARCEL_UPDATING_STARTED",
-    ParcelUpdatingCompletedAction = "PARCEL_UPDATING_COMPLETED",
-    ParcelUpdatingFailedAction = "PARCEL_UPDATING_FAILED",
+    ParcelUpdatingStartedAction = 'PARCEL_UPDATING_STARTED',
+    ParcelUpdatingCompletedAction = 'PARCEL_UPDATING_COMPLETED',
+    ParcelUpdatingFailedAction = 'PARCEL_UPDATING_FAILED',
 
-    SearchParcelsStartedAction = "SEARCH_PARCELS_STARTED",
-    SearchParcelsCompletedAction = "SEARCH_PARCELS_COMPLETED",
-    SearchParcelsFailedAction = "SEARCH_PARCELS_FAILED"
+    SearchParcelsStartedAction = 'SEARCH_PARCELS_STARTED',
+    SearchParcelsCompletedAction = 'SEARCH_PARCELS_COMPLETED',
+    SearchParcelsFailedAction = 'SEARCH_PARCELS_FAILED'
 }
 
 export type Action = LoadParcelsStartedAction | LoadParcelsCompletedAction | LoadParcelsFailedAction |

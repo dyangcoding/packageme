@@ -7,7 +7,7 @@ export interface UpstreamParcelProperties {
 }
 
 // remove _id which is only required from Mongo Client to fetch Tweet Collection
-export type ParcelProperties = Omit<UpstreamParcelProperties, "_id">;
+export type ParcelProperties = Omit<UpstreamParcelProperties, '_id'>;
 
 export function toParcelProperties(parcel: UpstreamParcelProperties): ParcelProperties {
     return {

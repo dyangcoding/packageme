@@ -1,9 +1,9 @@
-import React, { Fragment } from "react";
-import { connect } from "react-redux";
-import { AppState } from "../app/store";
-import { XIcon, QrcodeIcon, InformationCircleIcon } from "@heroicons/react/outline";
-import { login } from "./actions";
-import { setSessionID } from "../services/storage";
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { AppState } from '../app/store';
+import { XIcon, QrcodeIcon, InformationCircleIcon } from '@heroicons/react/outline';
+import { login } from './actions';
+import { setSessionID } from '../services/storage';
 
 interface OwnProps {
     readonly onToggleDialog: () => void;
@@ -31,8 +31,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         super(props);
 
         this.state = {
-            code: "",
-            codeError: "",
+            code: '',
+            codeError: '',
         };
 
         this.onToggleDialog = this.onToggleDialog.bind(this);

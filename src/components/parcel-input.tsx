@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
-import { ParcelProperties } from "../models/parcel";
-import * as INFO from "../utils/string-utils";
+import React, { Fragment } from 'react';
+import { ParcelProperties } from '../models/parcel';
+import * as INFO from '../utils/string-utils';
 import moment from "moment";
-import Tooltip from "./tooltip-wrapper";
-import { AppState } from "../app/store";
-import { insertParcel } from "../parcel/actions";
-import { connect } from "react-redux";
+import Tooltip from './tooltip-wrapper';
+import { AppState } from '../app/store';
+import { insertParcel } from '../parcel/actions';
+import { connect } from 'react-redux';
 
 interface OwnProps {
     readonly insertionError: string;

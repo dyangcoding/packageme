@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
-import { InformationCircleIcon } from "@heroicons/react/solid";
-import ReactTooltip from "react-tooltip";
+import React, { Fragment } from 'react';
+import { InformationCircleIcon } from '@heroicons/react/solid';
+import ReactTooltip from 'react-tooltip';
 
-export const TOOLTIP_TYPES = ["dark", "success", "warning", "info", "light"] as const
+export const TOOLTIP_TYPES = ['dark', 'success', 'warning', 'info', 'light'] as const
 export type TooltipType = typeof TOOLTIP_TYPES[number]
 
-export const TOOLTIP_PLACES = ["top", "right", "left", "bottom"] as const
+export const TOOLTIP_PLACES = ['top', 'right', 'left', 'bottom'] as const
 export type TooltipPlace = typeof TOOLTIP_TYPES[number]
 
 const Content = ({ title, description } : { title: string, description: string } ) => {

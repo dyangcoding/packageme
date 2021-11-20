@@ -1,7 +1,7 @@
-import React from "react";
-import about from "../imgs/about.png";
-import AccordionItem from "../components/accordion-item";
-import { faqs } from "../utils/faq";
+import React from 'react';
+import about from '../imgs/about.png';
+import AccordionItem from '../components/accordion-item';
+import { faqs } from '../utils/faq';
 
 class About extends React.Component {
     public render(): React.ReactNode {

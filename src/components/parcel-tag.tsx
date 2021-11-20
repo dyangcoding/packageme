@@ -1,6 +1,6 @@
-import React from "react";
-import { XIcon } from "@heroicons/react/outline";
-import { ParcelProperties } from "../models/parcel";
+import React from 'react';
+import { XIcon } from '@heroicons/react/outline';
+import { ParcelProperties } from '../models/parcel';
 
 interface TagProps {
     readonly parcel: ParcelProperties;

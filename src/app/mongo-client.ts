@@ -1,6 +1,6 @@
-import * as Realm from "realm-web";
-import { ParcelProperties, UpstreamParcelProperties } from "../models/parcel";
-import { UpstreamSessionProperties } from "../models/session";
+import * as Realm from 'realm-web';
+import { ParcelProperties, UpstreamParcelProperties } from '../models/parcel';
+import { UpstreamSessionProperties } from '../models/session';
 
 /*
 Modify Mongo Collection Output using Aggregation Pipelines
@@ -11,11 +11,11 @@ https://docs.mongodb.com/manual/reference/change-events/#change-stream-output
 */
 const pipeline = [
     {
-      $project: { "_id": 0 }
+      $project: { '_id': 0 }
     }
 ];
 
-const REALM_APP_ID = process.env.REACT_APP_REALM_APP_ID || "";
+const REALM_APP_ID = process.env.REACT_APP_REALM_APP_ID || '';
 const app = new Realm.App({ id: REALM_APP_ID });
 
 async function loggIn() {
@@ -25,21 +25,21 @@ async function loggIn() {
 
 async function getMongoDB() {
     const currentUser = app.currentUser ? app.currentUser : await loggIn();
-    return currentUser.mongoClient("mongodb-atlas");
+    return currentUser.mongoClient('mongodb-atlas');
 }
 
 export async function parcelCollection() {
     const mongoDb = await getMongoDB();
     return mongoDb
-        .db("findMyPackages")
-        .collection<UpstreamParcelProperties>("parcels");
+        .db('findMyPackages')
+        .collection<UpstreamParcelProperties>('parcels');
 }
 
 export async function sessionCollection() {
     const mongoDb = await getMongoDB();
     return mongoDb
-        .db("findMyPackages")
-        .collection<UpstreamSessionProperties>("sessions");
+        .db('findMyPackages')
+        .collection<UpstreamSessionProperties>('sessions');
 }
 
 export async function fetchParcels() {
@@ -51,11 +51,11 @@ export async function fetchParcels() {
 
 export async function filterParcels(searchTerm: string) {
     const collection = await parcelCollection();
-    const reg = { "$regex": new Realm.BSON.BSONRegExp(searchTerm) };
+    const reg = { '$regex': new Realm.BSON.BSONRegExp(searchTerm) };
     const query = {
-        "$or": [
-            { "info": reg},
-            { "remark": reg}
+        '$or': [
+            { 'info': reg},
+            { 'remark': reg}
         ]
     };
     return collection.find(query);
@@ -63,7 +63,7 @@ export async function filterParcels(searchTerm: string) {
 
 export async function deleteSession(sessionID: string) {
     const collection = await sessionCollection();
-    return collection.deleteOne({ "_id": sessionID } );
+    return collection.deleteOne({ '_id': sessionID } );
 }
 
 export async function insertParcels(parcels: ReadonlyArray<ParcelProperties>) {

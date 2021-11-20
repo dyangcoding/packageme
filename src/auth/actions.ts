@@ -1,15 +1,15 @@
-import { AsyncThunkAction, ThunkAction } from "../app/store";
-import { requests } from "../services/ajax";
-import { Logout } from "../services/storage";
+import { AsyncThunkAction, ThunkAction } from '../app/store';
+import { requests } from '../services/ajax';
+import { Logout } from '../services/storage';
 
 export enum ActionType {
-    LoginStartedAction = "LOGIN_STARTED",
-    LoginCompletedAction = "LOGIN_COMPLETED",
-    LoginFailedAction = "LOGIN_FAILED",
+    LoginStartedAction = 'LOGIN_STARTED',
+    LoginCompletedAction = 'LOGIN_COMPLETED',
+    LoginFailedAction = 'LOGIN_FAILED',
 
-    LogoutStartedAction = "LOGOUT_STARTED",
-    LogoutCompletedAction = "LOGOUT_COMPLETED",
-    LogoutFailedAction = "LOGOUT_FAILED",
+    LogoutStartedAction = 'LOGOUT_STARTED',
+    LogoutCompletedAction = 'LOGOUT_COMPLETED',
+    LogoutFailedAction = 'LOGOUT_FAILED',
 }
 
 export type Action = LoginStartedAction | LoginCompletedAction | LoginFailedAction
@@ -46,7 +46,7 @@ export interface LogoutFailedAction {
 export function login(code: string): AsyncThunkAction<Action, string> {
     return dispatch => {
         dispatch({type: ActionType.LoginStartedAction});
-        return requests.post("/verify_otp", JSON.stringify({ code })).then(
+        return requests.post('/verify_otp', JSON.stringify({ code })).then(
             result => {
                 dispatch({type: ActionType.LoginCompletedAction, sessionID: result.sessionID});
                 return result.sessionID;

@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 class Footer extends React.PureComponent {
     render() {
         return (
-            <div className="container mx-auto max-w-6xl flex justify-center items-center h-28 border-t py-4">
+            <div className="container mx-auto max-w-6xl flex justify-center items-center h-28 border-t p-5">
                 <div className="container flex flex-col md:flex-row items-center justify-between m-4">
                     <div className="text-sm text-gray-500">
                         © {new Date().getFullYear()} <a href="/" className="capitalize mr-1">{process.env.REACT_APP_SITE_NAME}</a>

@@ -1,9 +1,9 @@
-import React from "react";
-import { ParcelProperties } from "../models/parcel";
-import { MailIcon, ChatAltIcon, CalendarIcon, CheckIcon } from "@heroicons/react/outline";
-import ReactTooltip from "react-tooltip";
-import { collectParcel } from "../app/mongo-client";
-import moment from "moment";
+import React from 'react';
+import { ParcelProperties } from '../models/parcel';
+import { MailIcon, ChatAltIcon, CalendarIcon, CheckIcon } from '@heroicons/react/outline';
+import ReactTooltip from 'react-tooltip';
+import { collectParcel } from '../app/mongo-client';
+import moment from 'moment';
 
 interface EntryProps {
     readonly parcel: ParcelProperties;

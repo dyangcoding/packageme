@@ -1,4 +1,4 @@
-import { deleteSession } from "../app/mongo-client";
+import { deleteSession } from '../app/mongo-client';
 
 export function getSessionItem(key: string): string | undefined {
     const item = localStorage.getItem(key);

@@ -1,12 +1,12 @@
-import React, { Fragment } from "react";
-import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon } from "@heroicons/react/outline";
-import { ParcelProperties } from "../models/parcel";
-import { AppState } from "../app/store";
-import { connect } from "react-redux";
-import { loadParcels, searchParcels } from "./actions";
-import ParcelEntry from "./parcel-entry";
-import { Login } from "../auth/login";
-import empty from "../imgs/void.png";
+import React, { Fragment } from 'react';
+import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon } from '@heroicons/react/outline';
+import { ParcelProperties } from '../models/parcel';
+import { AppState } from '../app/store';
+import { connect } from 'react-redux';
+import { loadParcels, searchParcels } from './actions';
+import ParcelEntry from './parcel-entry';
+import { Login } from '../auth/login';
+import empty from '../imgs/void.png';
 
 interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;
@@ -44,8 +44,23 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         this.props.onLoad();
     }
 
+    public render(): React.ReactNode {
+        const authenticated = this.props.sessionID;
+        return (
+            <Fragment>
+                <div className="container mx-auto max-w-6xl my-4 p-2 md:p-5">
+                    {this.renderHeader()}
+                    <div className="flex-col items-center my-4 space-y-2 p-5">
+                        { authenticated ? this.renderParcels() : this.renderLogin()}        
+                    </div>
+                </div>
+                {this.state.shown ? <Login onToggleDialog={this.onToggleLogin} /> : null}
+            </Fragment>
+        );
+    }
+
     private renderHeader() {
-        let clazzName = "flex flex-col md:flex-row bg-white my-2 md:py-4";
+        let clazzName = "flex flex-col md:flex-row my-2 p-2 md:p-5";
         const parcels = this.props.parcels;
         const collected = parcels.filter(parcel => parcel.collected).length;
         const uncollected = parcels.length - collected;
@@ -72,21 +87,6 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
                 </div>
                 { authenticated ? this.renderSearchInput() : null }
             </div>
-        );
-    }
-
-    public render(): React.ReactNode {
-        const authenticated = this.props.sessionID;
-        return (
-            <Fragment>
-                <div className="container mx-auto max-w-6xl my-4 p-5">
-                    {this.renderHeader()}
-                    <div className="flex-col items-center my-4 space-y-2">
-                        { authenticated ? this.renderParcels() : this.renderLogin()}        
-                    </div>
-                </div>
-                {this.state.shown ? <Login onToggleDialog={this.onToggleLogin} /> : null}
-            </Fragment>
         );
     }
 

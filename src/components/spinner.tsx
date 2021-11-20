@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const Spinner = ({ width, high } : { width?: string, high?: string }) => {
-    let style = "loader ease-linear rounded-full border-4 border-t-4 border-gray-200 mx-auto ";
+    let style = "loader ease-linear rounded-full border-4 border-t-4 border-gray-200 mx-auto";
     style += width ? width : "w-16 ";
     style += high ? high : "h-16";
     return (
