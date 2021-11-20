@@ -48,7 +48,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         const authenticated = this.props.sessionID;
         return (
             <Fragment>
-                <div className="container mx-auto max-w-6xl my-4 p-2 md:p-5">
+                <div className="container mx-auto max-w-6xl px-2 md:px-5 py-8">
                     {this.renderHeader()}
                     <div className="flex-col items-center my-4 space-y-2 p-5">
                         { authenticated ? this.renderParcels() : this.renderLogin()}        

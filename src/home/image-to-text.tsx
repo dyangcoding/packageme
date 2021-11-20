@@ -47,9 +47,9 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
 
     public render() {
         return (
-            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row md:space-x-4 p-2 md:p-5">
+            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row md:space-x-4 px-2 md:px-5 py-8">
                 {this.renderImagePicker()}
-                {this.renderOcrText()}
+                {this.renderText()}
                 {this.renderParcelInput()}
             </div>
         );
@@ -65,13 +65,13 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
                     <Tooltip id="image-picker" title="Pick Images" description={INFO.imagePickerInfo} />
                 </div>
                 <div className="flex justify-center items-center h-60 md:h-96 mt-2 border-dashed border-4 rounded-md">
-                    {this.renderStatus()}
+                    {this.renderInternal()}
                 </div>
             </div>
         );
     }
 
-    private renderStatus(): React.ReactNode {
+    private renderInternal(): React.ReactNode {
         if (this.state.processing) {
             return <Spinner />;
         }
@@ -90,7 +90,7 @@ class ImageToText extends React.Component<ImageToTextProps, ImageToTextState> {
         );
     }
 
-    private renderOcrText() {
+    private renderText() {
         return (
             <div className="container w-full md:w-1/3 flex-col p-5 mx-auto">
                 <div className="flex items-center space-x-1">
