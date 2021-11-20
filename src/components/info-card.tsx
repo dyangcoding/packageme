@@ -9,10 +9,6 @@ interface CardProps {
 }
 
 class InfoCard extends React.Component<CardProps> {
-    constructor(props: CardProps) {
-        super(props);
-    }
-
     public render(): React.ReactNode {
         return (
             <div className="flex flex-col items-center justify-center m-2 p-4 bg-white rounded-md md:w-1/3">
