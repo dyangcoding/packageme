@@ -67,8 +67,8 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     private renderMenu(): React.ReactNode {
         return (
             <div className="h-screen">
-                <div className="flex flex-col overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 items-center justify-center">
-                    <div className="ml-auto m-8 bg-white rounded-full" onClick={this.onToggleMenu}>
+                <div className="flex flex-col overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 my-24">
+                    <div className="ml-auto mx-8 bg-white rounded-full" onClick={this.onToggleMenu}>
                         <XIcon className="text-black cursor-pointer h-10 w-10 p-2" aria-hidden="true" />
                     </div>
                     <div className="md:hidden flex flex-col text-2xl text-white mt-8 items-center justify-center" id="navbar-collapse">
