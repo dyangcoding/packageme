@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 
 const instance = axios.create({
-	baseURL: 'http://localhost:8080/',
-	timeout: 15000,
+	baseURL: process.env.REACT_APP_TOTP_BASE_URL,
+	timeout: 20000,
 	headers: {
 		'Content-type': 'application/json',
 	}

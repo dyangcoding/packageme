@@ -46,7 +46,7 @@ export interface LogoutFailedAction {
 export function login(code: string): AsyncThunkAction<Action, string> {
     return dispatch => {
         dispatch({type: ActionType.LoginStartedAction});
-        return requests.post('/verify_otp', JSON.stringify({ code })).then(
+        return requests.post('/otp', JSON.stringify({ code })).then(
             result => {
                 dispatch({type: ActionType.LoginCompletedAction, sessionID: result.sessionID});
                 return result.sessionID;
