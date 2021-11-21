@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, NavLink, Route, Switch } from 'react-router-dom';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
