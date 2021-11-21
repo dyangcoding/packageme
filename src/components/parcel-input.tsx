@@ -83,7 +83,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
                     <input id="term-of-use" name="term-of-use" type="checkbox" onChange={this.onTermOfUseChange}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
                     <label htmlFor="term-of-use" className="ml-2 block text-sm text-gray-500">
-                        You are agree with the Terms of Use.
+                        You are agree with the <a href="/legal" className="underline">Terms of Use</a>.
                     </label>
                 </div>
                 <button type="submit" onClick={this.onSubmit}

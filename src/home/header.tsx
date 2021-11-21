@@ -71,7 +71,6 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                     <div className="md:hidden flex flex-col text-2xl text-white mt-8 items-center justify-center" id="navbar-collapse">
                         <NavLink exact to="/" className="p-2" onClick={this.onToggleMenu}>Home</NavLink>
                         <NavLink to="/about" className="p-2" onClick={this.onToggleMenu}>About</NavLink>
-                        <button onClick={this.onContactClick} className="p-2">Contact</button>
                         {this.renderAuthAction()}  
                     </div>
                 </div>
@@ -93,18 +92,15 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                         </button>
                     </div>
                     <div className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                        <NavLink exact to="/" activeClassName="border-b-4 border-indigo-600"
+                        <NavLink exact to="/" activeClassName="bg-indigo-500 text-white"
                             className="p-2 lg:px-4 md:mx-2 hover:bg-gray-200 hover:text-gray-700 rounded transition-colors duration-300">
                             Home
                         </NavLink>
-                        <NavLink to="/about" activeClassName="border-b-4 border-indigo-600"
+                        <NavLink to="/about" activeClassName="bg-indigo-500 text-white"
                             className="p-2 lg:px-4 md:mx-2 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
                             About
                         </NavLink>
-                        <button onClick={this.onContactClick} 
-                            className="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                            Contact
-                        </button>
+    
                         {this.renderAuthAction()}  
                     </div>
                 </nav>
@@ -120,7 +116,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     private renderLogin(): React.ReactNode {
         return (
             <button onClick={this.onLoginClick} 
-                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
+                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0">
                 Log in
             </button>
         )
@@ -129,16 +125,10 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     private renderLogout(): React.ReactNode {
         return (
             <button onClick={this.onLogoutClick} 
-                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
+                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0">
                 Log out
             </button>
         )
-    }
-
-    private onContactClick(_event: React.MouseEvent<HTMLButtonElement>): void {
-        const email = 'hello.packageme@gmail.com';
-        const subject = 'Questions regarding packageme';
-        document.location = 'mailto:' + email + '?subject=' + subject;
     }
 
     private onLoginClick(event: React.MouseEvent<HTMLButtonElement>): void {

@@ -44,7 +44,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         return (
             <Fragment> 
                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-auto mx-auto">
-                    <div className="relative w-5/6 md:w-2/5 my-6 mx-auto max-w-3xl">
+                    <div className="relative w-5/6 md:w-2/5 xl:w-1/4 my-6 mx-auto max-w-3xl">
                         {this.renderDialog()}        
                     </div>
                 </div>
@@ -135,7 +135,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         return (
             <div className="flex items-center justify-start p-2 md:p-5 border-t border-solid border-blueGray-200 rounded-b space-x-2">
                 <InformationCircleIcon className="flex-none text-gray-500 h-4 w-4" aria-hidden="true" />
-                <div className="text-sm text-gray-500">By Login You are agreed with the Terms of Use.</div>
+                <div className="text-sm text-gray-500">By Login You are agreed with the <a href="/legal" className="underline">Terms of Use</a>.</div>
             </div>
         );
     }
