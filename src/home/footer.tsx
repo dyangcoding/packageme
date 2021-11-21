@@ -10,7 +10,7 @@ class Footer extends React.PureComponent {
                         All Rights Reserved.
                     </div>
                     <div className="flex text-sm text-blue-400 py-2 md:py-0">
-                        <a href="/tou" className="px-2">Terms Of Use</a>
+                        <a href="/legal" className="px-2">Terms Of Use</a>
                         <a href="/privacy" className="px-2">Privacy</a>
                         <a href="/help" className="pl-2">Help</a>
                     </div>
