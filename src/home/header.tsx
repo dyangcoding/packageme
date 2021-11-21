@@ -7,6 +7,7 @@ import { logout } from '../auth/actions';
 import { Login } from '../auth/login';
 import About from '../pages/about';
 import Home from '../pages/home';
+import Legal from '../pages/legal';
 
 interface StateProps {
     readonly sessionID: string;
@@ -44,14 +45,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
         const toggleMenu = this.state.menuToggled;
         return (
             <Router>
-                {toggleMenu 
-                    ?
-                    this.renderMenu()
-                    :
-                    <div className="container mx-auto max-w-6xl">
-                        {this.renderNavbar()}
-                    </div>
-                }
+                {toggleMenu ? this.renderMobileNavbar() : this.renderNavbar()}
                 <Switch>
                     <Route exact path="/">
                         <Home />
@@ -59,29 +53,26 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                     <Route path="/about">
                         <About />
                     </Route>
+                    <Route path="/legal">
+                        <Legal />
+                    </Route>
                 </Switch>
             </Router>
         );
     }
 
-    private renderMenu(): React.ReactNode {
+    private renderMobileNavbar(): React.ReactNode {
         return (
-            <div className="h-screen">
+            <div className="h-full">
                 <div className="flex flex-col overflow-x-hidden overflow-y-hidden fixed inset-0 z-50 my-24">
                     <div className="ml-auto mx-8 bg-white rounded-full" onClick={this.onToggleMenu}>
                         <XIcon className="text-black cursor-pointer h-10 w-10 p-2" aria-hidden="true" />
                     </div>
                     <div className="md:hidden flex flex-col text-2xl text-white mt-8 items-center justify-center" id="navbar-collapse">
-                        <NavLink exact to="/" className="p-2" onClick={this.onToggleMenu}>
-                            Home
-                        </NavLink>
-                        <NavLink to="/about" className="p-2" onClick={this.onToggleMenu}>
-                            About
-                        </NavLink>
-                        <button onClick={this.onContactClick} className="p-2">
-                            Contact
-                        </button>
-                        {this.renderAction()}  
+                        <NavLink exact to="/" className="p-2" onClick={this.onToggleMenu}>Home</NavLink>
+                        <NavLink to="/about" className="p-2" onClick={this.onToggleMenu}>About</NavLink>
+                        <button onClick={this.onContactClick} className="p-2">Contact</button>
+                        {this.renderAuthAction()}  
                     </div>
                 </div>
                 <div className="opacity-95 fixed inset-0 z-40 bg-gradient-to-br from-green-400 to-blue-500"></div>
@@ -91,51 +82,45 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
 
     private renderNavbar(): React.ReactNode {
         return (
-            <Fragment>
-                <nav>
-                    <div className="container p-5 mx-auto md:flex md:items-center">
-                        <div className="flex justify-between items-center">
-                            <NavLink to="/" className="font-bold text-2xl text-indigo-600 capitalize">
-                                {process.env.REACT_APP_SITE_NAME}
-                            </NavLink>
-                            <button className="px-2 py-1 hover:opacity-75 md:hidden" id="navbar-toggle" onClick={this.onToggleMenu}>
-                                <MenuIcon className="text-black cursor-pointer h-6 w-6" aria-hidden="true" />
-                            </button>
-                        </div>
-                        <div className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
-                            <NavLink exact to="/" activeClassName="border-b-4 border-indigo-600"
-                                className="p-2 lg:px-4 md:mx-2 hover:bg-gray-200 hover:text-gray-700 rounded transition-colors duration-300">
-                                Home
-                            </NavLink>
-                            <NavLink to="/about" activeClassName="border-b-4 border-indigo-600"
-                                className="p-2 lg:px-4 md:mx-2 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                                About
-                            </NavLink>
-                            <button onClick={this.onContactClick} 
-                                className="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
-                                Contact
-                            </button>
-                            {this.renderAction()}  
-                        </div>
+            <div className="container mx-auto max-w-6xl">
+                <nav className="container p-5 mx-auto md:flex md:items-center">
+                    <div className="flex justify-between items-center">
+                        <NavLink to="/" className="font-bold text-2xl text-indigo-600 capitalize">
+                            {process.env.REACT_APP_SITE_NAME}
+                        </NavLink>
+                        <button className="px-2 py-1 hover:opacity-75 md:hidden" id="navbar-toggle" onClick={this.onToggleMenu}>
+                            <MenuIcon className="text-black cursor-pointer h-6 w-6" aria-hidden="true" />
+                        </button>
+                    </div>
+                    <div className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
+                        <NavLink exact to="/" activeClassName="border-b-4 border-indigo-600"
+                            className="p-2 lg:px-4 md:mx-2 hover:bg-gray-200 hover:text-gray-700 rounded transition-colors duration-300">
+                            Home
+                        </NavLink>
+                        <NavLink to="/about" activeClassName="border-b-4 border-indigo-600"
+                            className="p-2 lg:px-4 md:mx-2 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                            About
+                        </NavLink>
+                        <button onClick={this.onContactClick} 
+                            className="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                            Contact
+                        </button>
+                        {this.renderAuthAction()}  
                     </div>
                 </nav>
                 {this.state.dialogToggled ? <Login onToggleDialog={this.onToggleDialog} /> : null}
-            </Fragment>
+            </div>
         );
     }
 
-    private renderAction(): React.ReactNode {
-        const sessionID = this.props.sessionID;
-        if (sessionID) {
-            return this.renderLogout();
-        }
-        return this.renderLogin();
+    private renderAuthAction(): React.ReactNode {
+        return this.props.sessionID ? this.renderLogout() : this.renderLogin();
     }
 
     private renderLogin(): React.ReactNode {
         return (
             <button onClick={this.onLoginClick} 
-                className="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-solid border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
+                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
                 Log in
             </button>
         )
@@ -144,7 +129,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     private renderLogout(): React.ReactNode {
         return (
             <button onClick={this.onLogoutClick} 
-                className="p-2 lg:px-4 md:mx-2 text-indigo-600 text-center border border-solid border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
+                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0 md:ml-1">
                 Log out
             </button>
         )

@@ -141,10 +141,10 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         return (
             <div className="flex items-center justify-center border-dotted border-2 h-60">
                 <div className="flex flex-col md:flex-row items-center justify-center text-base md:text-xl space-x-2">
-                    <UserCircleIcon className="text-green-500 h-6 w-6" aria-hidden="true" />
+                    <UserCircleIcon className="text-green-500 h-8 w-8" aria-hidden="true" />
                     <div>
                         <span className="cursor-pointer underline mr-1" onClick={this.onToggleLogin}>Login</span> 
-                        to view the Packages Informations.
+                        to view the Package's Informations.
                     </div>
                 </div> 
             </div>

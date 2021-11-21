@@ -44,7 +44,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         return (
             <Fragment> 
                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-auto mx-auto">
-                    <div className="relative w-full md:w-1/4 my-6 mx-auto max-w-3xl">
+                    <div className="relative w-5/6 md:w-2/5 my-6 mx-auto max-w-3xl">
                         {this.renderDialog()}        
                     </div>
                 </div>
@@ -89,7 +89,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         return (
             <div className="flex justify-center items-center space-x-2">
                 <p className="text-base md:text-lg leading-4">
-                    Scan the QR-Code you received to Login. using one of the following Authenticators.
+                    Scan the QR-Code you received using one of the following Authenticators to Login.
                 </p>
             </div>
         );
@@ -156,7 +156,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         this.setState({code: event.target.value, codeError: ''});
     }
 
-    private async onLoginClick(event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
+    private async onLoginClick(_event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
         const code = this.state.code;
         if (!code.length || Number.isNaN(code) || code.length !== 6) {
             this.setState({codeError: "The Code should be a six digit number."});
