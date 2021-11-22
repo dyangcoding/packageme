@@ -7,6 +7,7 @@ import { loadParcels, searchParcels } from './actions';
 import ParcelEntry from './parcel-entry';
 import { Login } from '../auth/login';
 import empty from '../imgs/void.png';
+import { HeroIcon } from '../components/herocon-icon';
 
 interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;
@@ -37,6 +38,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
 
         this.onToggleLogin = this.onToggleLogin.bind(this);
         this.onSearchInput = this.onSearchInput.bind(this);
+        this.onClearSearchInput = this.onClearSearchInput.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
     }
 
@@ -65,25 +67,25 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         const collected = parcels.filter(parcel => parcel.collected).length;
         const uncollected = parcels.length - collected;
         const authenticated = this.props.sessionID;
-        clazzName += authenticated ? " justify-between border-b-2" : " justify-center";
+        clazzName += authenticated ? " justify-between border-b-2" : " justify-center space-x-2-4";
         return (
             <div className={clazzName}>
-                <div className="flex items-center text-lg md:text-2xl md:divide-x md:divide-green-500 space-x-4">
-                    <span className="px-2">
+                <div className="flex md:flex-none items-center text-lg md:text-2xl md:divide-x md:divide-green-500 space-x-4 md:w-1/2">
+                    <div className="px-2">
                         Packages in Total: <span className="underline">{parcels.length.toLocaleString()}</span>
-                    </span>
-                    <span className="flex items-center space-x-2 md:px-4">
+                    </div>
+                    <div className="flex items-center space-x-2 md:px-4">
                         <div className="flex items-center p-2 rounded-full cursor-pointer bg-green-100">
                             <CheckIcon className="text-green-500 h-4 w-4 md:h-6 md:w-6" aria-hidden="true" data-tip="Collected Packages" />
                         </div>
                         <span>{collected.toLocaleString()}</span> 
-                    </span>
-                    <span className="flex items-center space-x-2 md:px-4">
+                    </div>
+                    <div className="flex items-center space-x-2 md:px-4">
                         <div className="flex items-center p-2 rounded-full cursor-pointer bg-yellow-100">
                             <InboxIcon className="text-yellow-500 h-4 w-4 md:h-6 md:w-6" aria-hidden="true" data-tip="Uncollected Packages" />
                         </div>
                         <span>{uncollected.toLocaleString()}</span> 
-                    </span>
+                    </div>
                 </div>
                 { authenticated ? this.renderSearchInput() : null }
             </div>
@@ -91,20 +93,35 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     }
 
     private renderSearchInput(): React.ReactNode {
+        const searchTerm = this.state.searchTerm;
         return (
-            <div className="relative w-full md:w-1/2 my-6 md:my-2">
-                <div className="absolute top-3 md:top-2 left-2"> 
-                    <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h4 w-4 md:h-6 md:w-6" aria-hidden="true" />
-                </div> 
-                <input type="text" className="border border-solid border-gray-200 h-10 w-full pl-8 md:pl-12 pr-18 md:pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none text-sm md:text-base" 
-                    placeholder="Search Name/Apartment number" onChange={this.onSearchInput} />
-                <div className="absolute top-1.5 right-1"> 
-                    <button className="h-7 w-14 md:w-20 text-white rounded-lg bg-red-500 hover:bg-red-600 text-sm" onClick={this.onSearchClick}>
+            <div className="flex items-center md:w-1/2">
+                <div className="relative w-full md:w-5/6 my-6 md:my-2">
+                    <div className="absolute top-3 md:top-2 left-2"> 
+                        <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h4 w-4 md:h-6 md:w-6" aria-hidden="true" />
+                    </div> 
+                    <input type="text" value={searchTerm || ''} className="border border-solid border-gray-200 h-10 w-full pl-8 md:pl-10 pr-18 md:pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none text-sm md:text-base" 
+                        placeholder="Search Name/Apartment number" onChange={this.onSearchInput} />
+                    {this.renderClearAction()}
+                </div>
+                <div className="ml-2 px-1">
+                    <button className="p-2 text-white rounded-lg bg-red-500 hover:bg-red-600" onClick={this.onSearchClick}>
                         Search
-                    </button> 
+                    </button>
                 </div>
             </div>
         );
+    }
+
+    private renderClearAction(): React.ReactNode {
+        if (this.state.searchTerm) {
+            return (
+                <div className="absolute top-1.5 right-1" onClick={this.onClearSearchInput}>
+                    <HeroIcon icon="XIcon" className="cursor-pointer w-5 h-5 mr-1 mt-1 text-gray-500" />
+                </div>
+            );
+        }
+        return null;
     }
 
     private renderParcels(): React.ReactNode {
@@ -155,16 +172,16 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         this.setState(prevState => ({shown: !prevState.shown}));
     }
 
+    private onClearSearchInput(): void {
+        this.setState({searchTerm: ''});
+        this.props.onSearchInput('');
+    }
+
     private onSearchInput(event: React.ChangeEvent<HTMLInputElement>): void {
-        const searchTerm = event.target.value;
-        if (!searchTerm) {
-            this.props.onLoad();
-            return;
-        }
         this.setState({searchTerm: event.target.value});
     }
 
-    private onSearchClick(event: React.MouseEvent<HTMLButtonElement>): void {
+    private onSearchClick(_event: React.MouseEvent<HTMLButtonElement>): void {
         const searchTerm = this.state.searchTerm;
         if (!searchTerm) {
             return;
