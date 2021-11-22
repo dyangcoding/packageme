@@ -1,6 +1,6 @@
 import { fetchParcels, filterParcels } from '../app/mongo-client';
 import { AsyncThunkAction, ThunkAction } from '../app/store';
-import { ParcelProperties } from '../models/parcel';
+import { ParcelProperties, toParcelProperties } from '../models/parcel';
 
 export enum ActionType {
     LoadParcelsStartedAction = 'LOAD_PARCELS_STARTED',
@@ -111,7 +111,7 @@ export function searchParcels(searchTerm: string): AsyncThunkAction<Action, Read
         dispatch({type: ActionType.SearchParcelsStartedAction});
         return filterParcels(searchTerm).then(
             results => {
-                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: results});
+                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: results.map(toParcelProperties)});
                 return results;
             }, 
             reason => {
