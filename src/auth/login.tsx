@@ -76,7 +76,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderMain(): React.ReactNode {
         return (
-            <div className="relative px-3 md:px-5 py-4 md:py-6 flex-col items-center justify-center">
+            <div className="px-3 md:px-5 py-4 md:py-6 flex-col items-center justify-center">
                 {this.renderIntroduction()}
                 {this.renderAuthenticators()}
                 {this.renderLoginAction()}
@@ -87,7 +87,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderIntroduction(): React.ReactNode {
         return (
-            <div className="flex justify-center items-center space-x-2">
+            <div className="flex justify-center items-center">
                 <p className="text-base md:text-lg leading-4">
                     Scan the QR-Code you received using one of the following Authenticators to Login.
                 </p>
@@ -119,11 +119,11 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderLoginAction(): React.ReactNode {
         return (
-            <div className="flex justify-center items-center mt-2 space-x-2">
+            <div className="flex justify-center items-center mt-2">
                 <input type="text" name="code" id="code" placeholder="Six digits Code" value={this.state.code || ""} onChange={this.onCodeChange}
                     className="h-10 px-2 border-2 border-indigo-500 flex-1 block rounded-md sm:text-sm"/>
                 <button
-                    className="flex py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="flex ml-2 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     type="button" onClick={this.onLoginClick}>
                     Login
                 </button>
@@ -133,9 +133,9 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private renderFooter(): React.ReactNode {
         return (
-            <div className="flex items-center justify-start p-2 md:p-5 border-t border-solid border-blueGray-200 rounded-b space-x-2">
+            <div className="flex items-center justify-start p-2 md:p-5 border-t border-solid border-blueGray-200 rounded-b">
                 <InformationCircleIcon className="flex-none text-gray-500 h-4 w-4" aria-hidden="true" />
-                <div className="text-sm text-gray-500">By Login You are agreed with the <a href="/legal" className="underline">Terms of Use</a>.</div>
+                <div className="text-sm text-gray-500 ml-1">By Login You are agreed with the <a href="/legal" className="underline">Terms of Use</a>.</div>
             </div>
         );
     }

@@ -121,7 +121,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
         } else if (!this.state.remark) {
             error = 'Remark can not be empty.';
         } else if (!this.state.checked) {
-            error = 'Please agree with the Terms of Service.';
+            error = 'Please agree with the Terms of Use.';
         }
         if (error) {
             this.setState({inputError: error});

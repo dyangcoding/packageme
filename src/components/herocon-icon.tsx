@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const HeroIcon = (props: Props): JSX.Element => {
-  const { icon, className = 'text-white h-8 w-8', outline = false } = props;
+  const { icon, className = 'text-white h-8 w-8', outline = true } = props;
 
   const Icon = outline ? OutlineIcons[icon] : SolidIcons[icon];
 
