@@ -45,16 +45,20 @@ function verifyTOTP(token, secret, window = 2) {
 }
 
 const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    'Content-Type': 'Application/json',
+    'Accept': 'Application/json'
 }
 
 exports.handler = async (event, _context) => {
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
-    }
     const data = JSON.parse(event.body);
     const secret = process.env.REACT_APP_TOTP_SECRET;
+    if (!secret) {
+        return {
+            headers: headers,
+            statusCode: 500,
+            body: JSON.stringify({error: 'No Secret provided for TOTP Verification.'})
+        }
+    }
     if (verifyTOTP(data.code, secret)) {
         return {
             headers: headers,
