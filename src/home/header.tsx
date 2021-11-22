@@ -5,8 +5,8 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { AppState } from '../app/store';
 import { logout } from '../auth/actions';
 import { Login } from '../auth/login';
+import { Home } from '../pages/home';
 import About from '../pages/about';
-import Home from '../pages/home';
 import Legal from '../pages/legal';
 
 interface StateProps {
