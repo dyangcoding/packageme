@@ -44,27 +44,26 @@ function verifyTOTP(token, secret, window = 2) {
     return false;
 }
 
-exports.handler = async (event, context) => {
-    if (event.httpMethod !== "POST") {
-        return { statusCode: 405, body: "Method Not Allowed" };
+const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+}
+
+exports.handler = async (event, _context) => {
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method Not Allowed' };
     }
     const data = JSON.parse(event.body);
     const secret = process.env.REACT_APP_TOTP_SECRET;
     if (verifyTOTP(data.code, secret)) {
         return {
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
+            headers: headers,
             statusCode: 200,
             body: JSON.stringify({sessionID: uuid()})
         };
     } else {
         return {
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
+            headers: headers,
             statusCode: 401,
             body: JSON.stringify({sessionID: ''})
         };

@@ -4,6 +4,15 @@ import InfoCard from '../components/info-card';
 import * as CONSTRUCTIONS from '../utils/string-utils';
 
 class Introduction extends React.Component {
+    instructions: React.RefObject<HTMLDivElement>;
+
+    constructor(props: {}) {
+        super(props);
+        this.instructions = React.createRef();
+
+        this.handleClick = this.handleClick.bind(this);
+    }
+
     public render(): React.ReactNode {
         return (
           <Fragment>
@@ -38,7 +47,8 @@ class Introduction extends React.Component {
                         tracks all the Packages for you.
                     </div>
                     <div className="mt-4">
-                        <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                            onClick={this.handleClick}>
                             Get started
                         </button>
                     </div>
@@ -46,9 +56,10 @@ class Introduction extends React.Component {
             </div>
         );
     }
+
     private renderInstructions(): React.ReactNode {
         return (
-            <div className="container mx-auto max-w-6xl flex flex-col items-center justify-center px-2 md:px-5 py-8">
+            <div className="container mx-auto max-w-6xl flex flex-col items-center justify-center px-2 md:px-5 py-8" ref={this.instructions}>
                 <div className="text-3xl md:text-4xl font-medium my-4">
                     How it works
                 </div>
@@ -62,6 +73,12 @@ class Introduction extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    private handleClick(): void {
+        if (this.instructions.current) {
+            this.instructions.current.scrollIntoView({behavior: 'smooth'});
+        }
     }
 }
 
