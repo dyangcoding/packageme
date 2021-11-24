@@ -3,32 +3,27 @@ import { ParcelProperties } from '../models/parcel';
 import * as INFO from '../utils/string-utils';
 import moment from "moment";
 import Tooltip from './tooltip-wrapper';
-import { AppState } from '../app/store';
-import { insertParcel } from '../parcel/actions';
-import { connect } from 'react-redux';
+import { insertParcels } from '../app/mongo-client';
 
-interface OwnProps {
-    readonly insertionError: string;
-}
-
-interface DispatchProps {
-    readonly onInsertParcel: (parcel: ParcelProperties) => PromiseLike<void>;
-}
-
-interface ParcelProps extends OwnProps, DispatchProps {}
+interface ParcelProps {}
 
 interface ParcelState {
     readonly info: string;
     readonly remark: string;
     readonly checked: boolean;
     readonly inputError?: string;
+    readonly insertionError?: string;
 }
 
-class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
+class ParcelInput extends React.Component<ParcelProps, ParcelState> {
     constructor(props: ParcelProps) {
         super(props);
 
-        this.state = { info: "", remark: "", checked: false };
+        this.state = { 
+            info: '', 
+            remark: '', 
+            checked: false 
+        };
 
         this.onInfoChange = this.onInfoChange.bind(this);
         this.onRemarkChange = this.onRemarkChange.bind(this);
@@ -65,7 +60,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
     }
 
     private renderErrorMessage(): React.ReactNode {
-        const message = this.props.insertionError || this.state.inputError;
+        const message = this.state.inputError || this.state.insertionError;
         if (message) {
             return (
                 <div className="flex items-center text-sm rounded-md my-2 p-2 bg-red-100 text-red-500">
@@ -80,7 +75,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
         return (
             <div className="mt-2">
                 <div className="flex items-center my-2">
-                    <input id="term-of-use" name="term-of-use" type="checkbox" onChange={this.onTermOfUseChange}
+                    <input id="term-of-use" name="term-of-use" type="checkbox" checked={this.state.checked} onChange={this.onTermOfUseChange}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
                     <label htmlFor="term-of-use" className="ml-2 block text-sm text-gray-500">
                         You are agree with the <a href="/legal" className="underline">Terms of Use</a>.
@@ -127,7 +122,9 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
             this.setState({inputError: error});
             return;
         }
-        this.props.onInsertParcel(this.buildParcel()).then(() => this.reset());
+        insertParcels([this.buildParcel()])
+            .then(() => this.reset())
+            .catch(error => this.setState({insertionError: error}));
     }
 
     private reset(): void {
@@ -144,16 +141,4 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
     }
 }
 
-function mapStateToProps(state: AppState): OwnProps {
-    return {
-        insertionError: state.parcels.error || '',
-    };
-}
-
-function mapDispatchToProps(dispatch: any): DispatchProps {
-    return {
-        onInsertParcel: (parcel: ParcelProperties) => dispatch(insertParcel(parcel)),
-    }
-}
-
-export const ParcelInput = connect(mapStateToProps, mapDispatchToProps)(ParcelInputComponent);
+export default ParcelInput;

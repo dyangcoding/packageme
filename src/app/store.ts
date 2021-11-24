@@ -31,30 +31,36 @@ const parcelsPipeline = [
     { 
       $in: [ 'insert', 'update' ] 
     }
-  ];
-  
-  (() => {
-    parcelCollection()
-    .then(async collection => {
-        for await (const parcel of collection.watch(parcelsPipeline)) {
-          switch (parcel.operationType) {
-            case 'insert': {
-              const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
-              if (fullDocument) {
-                store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
-                store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: toParcelProperties(fullDocument)});
-              }
-              break;
+];
+
+// TODO: also subscribe to DELETE Event if any inappropriate parcel information was submitted.
+
+(() => {
+  parcelCollection()
+  .then(async collection => {
+      for await (const parcel of collection.watch(parcelsPipeline)) {
+        switch (parcel.operationType) {
+          case 'insert': {
+            const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
+            if (fullDocument) {
+              store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
+              store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: toParcelProperties(fullDocument)});
+            } else {
+              store.dispatch({type: ParcelsActionType.ParcelInsertingFailedAction, error: 'Can not perform Parcel Insertion.'})
             }
-            case 'update': {
-              const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.UpdateEvent<UpstreamParcelProperties>;
-              if (fullDocument) {
-                store.dispatch({type: ParcelsActionType.ParcelUpdatingStartedAction});
-                store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: toParcelProperties(fullDocument)});
-              }
-              break;
+            break;
+          }
+          case 'update': {
+            const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.UpdateEvent<UpstreamParcelProperties>;
+            if (fullDocument) {
+              store.dispatch({type: ParcelsActionType.ParcelUpdatingStartedAction});
+              store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: toParcelProperties(fullDocument)});
+            } else {
+              store.dispatch({type: ParcelsActionType.ParcelUpdatingFailedAction, error: 'Can not perform Parcel Update.'})
             }
+            break;
           }
         }
-    })
-  })()
+      }
+  })
+})()

@@ -78,12 +78,12 @@ export async function insertParcels(parcels: ReadonlyArray<ParcelProperties>) {
         };
         documents.push(document);
     }
-    return await collection.insertMany(documents);
+    return collection.insertMany(documents);
 }
 
 export async function collectParcel(parcel: ParcelProperties) {
     const collection = await parcelCollection();
-    return await collection.updateOne(
+    return collection.updateOne(
         { info: parcel.info },
         { $set: {collected: true} }  
     );

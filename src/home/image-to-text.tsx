@@ -4,8 +4,8 @@ import { CloudUploadIcon } from '@heroicons/react/outline';
 import { createWorker } from 'tesseract.js';
 import Tooltip from '../components/tooltip-wrapper';
 import * as INFO from '../utils/string-utils';
-import { ParcelInput } from '../components/parcel-input';
 import Spinner from '../components/spinner';
+import ParcelInput from '../components/parcel-input';
 
 interface ImageToTextProps {}
 

@@ -1,4 +1,4 @@
-import { fetchParcels, filterParcels } from '../app/mongo-client';
+import { fetchParcels, filterParcels, insertParcels } from '../app/mongo-client';
 import { AsyncThunkAction, ThunkAction } from '../app/store';
 import { ParcelProperties, toParcelProperties } from '../models/parcel';
 
@@ -88,14 +88,6 @@ export function loadParcels(): ThunkAction<Action> {
             results => dispatch({type: ActionType.LoadParcelsCompletedAction, parcels: sortParcels(results)}),
             reason => dispatch({type: ActionType.LoadParcelsFailedAction, error: reason})
         );
-    }
-}
-
-// TODO: fire proper actions based on the response of Reaml update results
-export function insertParcel(parcel: ParcelProperties): ThunkAction<Action> {
-    return dispatch => {
-        dispatch({type: ActionType.ParcelInsertingStartedAction});
-        dispatch({type: ActionType.ParcelInsertingCompletedAction, parcel: parcel});
     }
 }
 
