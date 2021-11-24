@@ -8,6 +8,7 @@ import ParcelEntry from './parcel-entry';
 import { Login } from '../auth/login';
 import empty from '../imgs/void.png';
 import { HeroIcon } from '../components/herocon-icon';
+import ReactTooltip from 'react-tooltip';
 
 interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;
@@ -22,7 +23,7 @@ interface DispatchProps {
 }
 
 interface ParcelListState {
-    readonly searchTerm?: string;
+    readonly searchTerm: string;
     readonly shown: boolean;
 }
 
@@ -33,13 +34,16 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         super(props);
 
         this.state = {
+            searchTerm: '',
             shown: false,
         }
 
         this.onToggleLogin = this.onToggleLogin.bind(this);
-        this.onSearchInput = this.onSearchInput.bind(this);
+        this.onSearchInputChange = this.onSearchInputChange.bind(this);
+        this.onSearchInputKeyDown = this.onSearchInputKeyDown.bind(this);
         this.onClearSearchInput = this.onClearSearchInput.bind(this);
         this.onSearchClick = this.onSearchClick.bind(this);
+        this.validateSearchInput = this.validateSearchInput.bind(this);
     }
 
     public componentDidMount(): void {
@@ -87,7 +91,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
                         <span>{uncollected.toLocaleString()}</span> 
                     </div>
                 </div>
-                { authenticated ? this.renderSearchInput() : null }
+                { authenticated ? this.renderSearchInput() : <ReactTooltip /> }
             </div>
         );
     }
@@ -101,7 +105,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
                         <SearchIcon className="text-gray-400 z-20 hover:text-gray-500 h4 w-4 md:h-6 md:w-6" aria-hidden="true" />
                     </div> 
                     <input type="text" value={searchTerm || ''} className="border border-solid border-gray-200 h-10 w-full pl-8 md:pl-10 pr-18 md:pr-20 rounded-lg z-0 focus:shadow-lg focus:outline-none text-sm md:text-base" 
-                        placeholder="Search Name/Apartment number" onChange={this.onSearchInput} />
+                        placeholder="Search Name/Apartment number" onChange={this.onSearchInputChange} onKeyDown={this.onSearchInputKeyDown} />
                     {this.renderClearAction()}
                 </div>
                 <div className="ml-2 px-1">
@@ -177,16 +181,24 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         this.props.onSearchInput('');
     }
 
-    private onSearchInput(event: React.ChangeEvent<HTMLInputElement>): void {
+    private onSearchInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.setState({searchTerm: event.target.value});
     }
 
-    private onSearchClick(_event: React.MouseEvent<HTMLButtonElement>): void {
-        const searchTerm = this.state.searchTerm;
-        if (!searchTerm) {
-            return;
+    private onSearchInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.code === 'Enter' && this.validateSearchInput()) {
+            this.props.onSearchInput(this.state.searchTerm);
         }
-        this.props.onSearchInput(searchTerm);
+    }
+
+    private onSearchClick(_event: React.MouseEvent<HTMLButtonElement>): void {
+        if (this.validateSearchInput()) {
+            this.props.onSearchInput(this.state.searchTerm);
+        }
+    }
+
+    private validateSearchInput(): boolean {
+        return this.state.searchTerm.length ? true : false;
     }
 }
 
