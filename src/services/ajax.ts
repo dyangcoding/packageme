@@ -8,11 +8,21 @@ const instance = axios.create({
 	}
 });
 
-const responseBody = (response: AxiosResponse) => Promise.resolve(response.data);
+instance.interceptors.response.use(function(response) {
+	return response;
+}, function(error) {
+	if (error.response.status === 401) {
+		return Promise.reject(new Error('Can not verify the input code, try again.'));
+	} else {
+		return Promise.reject(error);
+	}
+});
+
+const responseHandler = (response: AxiosResponse) => Promise.resolve(response.data);
 
 export const requests = {
-	get: (url: string) => instance.get(url).then(responseBody),
-	post: (url: string, body: {}) => instance.post(url, body).then(responseBody),
-	put: (url: string, body: {}) => instance.put(url, body).then(responseBody),
-	delete: (url: string) => instance.delete(url).then(responseBody),
+	get: (url: string) => instance.get(url).then(responseHandler),
+	post: (url: string, body: {}) => instance.post(url, body).then(responseHandler),
+	put: (url: string, body: {}) => instance.put(url, body).then(responseHandler),
+	delete: (url: string) => instance.delete(url).then(responseHandler),
 };

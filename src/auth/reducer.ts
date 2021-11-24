@@ -28,6 +28,8 @@ export function userReducer(state: UserState = initialState, action: Action): Us
             return {...state, loading: 'completed', sessionID: action.sessionID};
         case ActionType.LogoutFailedAction:
             return {...state, loading: 'failed', error: action.error.message};
+        case ActionType.ClearErrorAction:
+            return {...state, loading: 'idle', error: undefined};
         default:
             return state;
     }

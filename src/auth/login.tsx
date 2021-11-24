@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../app/store';
 import { XIcon, QrcodeIcon, InformationCircleIcon } from '@heroicons/react/outline';
-import { login } from './actions';
+import { login, clearError } from './actions';
 import { setSessionID } from '../services/storage';
 
 interface OwnProps {
@@ -16,7 +16,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    readonly login: (code: string) => PromiseLike<string>;
+    readonly login: (code: string) => PromiseLike<void>;
+    readonly clearError: () => void;
 }
 
 interface LoginProps extends OwnProps, StateProps, DispatchProps {}
@@ -32,12 +33,20 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
         this.state = {
             code: '',
-            codeError: '',
+            codeError: this.props.error || '',
         };
 
         this.onToggleDialog = this.onToggleDialog.bind(this);
         this.onCodeChange = this.onCodeChange.bind(this);
+        this.onCodeKeyDown = this.onCodeKeyDown.bind(this);
         this.onLoginClick = this.onLoginClick.bind(this);
+    }
+
+    public componentDidUpdate(prevProps: LoginProps): void {
+        if (!prevProps.sessionID && this.props.sessionID) {
+            this.props.onToggleDialog();
+            setSessionID(this.props.sessionID);
+        }
     }
 
     public render(): React.ReactNode {
@@ -120,7 +129,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     private renderLoginAction(): React.ReactNode {
         return (
             <div className="flex justify-center items-center mt-2">
-                <input type="text" name="code" id="code" placeholder="Six digits Code" value={this.state.code || ""} onChange={this.onCodeChange}
+                <input type="text" name="code" id="code" placeholder="Six digits Code" value={this.state.code || ""} 
+                    onChange={this.onCodeChange} onKeyDown={this.onCodeKeyDown}
                     className="h-10 px-2 border-2 border-indigo-500 flex-1 block rounded-md sm:text-sm"/>
                 <button
                     className="flex ml-2 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -153,25 +163,33 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     }
 
     private onCodeChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        if (this.props.error) {
+            this.props.clearError();
+        }
         this.setState({code: event.target.value, codeError: ''});
     }
 
-    private async onLoginClick(_event: React.MouseEvent<HTMLButtonElement>): Promise<void> {
-        const code = this.state.code;
-        if (!code.length || Number.isNaN(code) || code.length !== 6) {
+    private onCodeKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.code === 'Enter') this.handleChange();
+    }
+
+    private onLoginClick(_event: React.MouseEvent<HTMLButtonElement>): void {
+        this.handleChange();
+    }
+
+    private handleChange(): void {
+        const value = this.state.code;
+        if (value.length !== 6 || Number.isNaN(value)) {
             this.setState({codeError: "The Code should be a six digit number."});
             return;
         }
-        const sessionID = await this.props.login(this.state.code);
-        if (sessionID) {
-            this.props.onToggleDialog();
-            setSessionID(sessionID);
-        } else {
-            this.setState({codeError: 'Can not verify the input code, try again.'});
-        }
+        this.props.login(this.state.code);
     }
 
     private onToggleDialog(): void {
+        if (this.props.error) {
+            this.props.clearError();
+        }
         this.props.onToggleDialog();
     }
 }
@@ -186,7 +204,8 @@ function mapStateToProps(state: AppState): StateProps {
 
 function mapDispatchToProps(dispatch: any): DispatchProps {
     return {
-        login: (code: string) => dispatch(login(code))
+        login: (code: string) => dispatch(login(code)),
+        clearError: () => dispatch(clearError())
     }
 }
 

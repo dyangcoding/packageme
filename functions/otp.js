@@ -69,7 +69,7 @@ exports.handler = async (event, _context) => {
         return {
             headers: headers,
             statusCode: 401,
-            body: JSON.stringify({sessionID: ''})
+            body: JSON.stringify({error: 'Can not verify the input code, try again.'})
         };
     }
 }

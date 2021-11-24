@@ -1,4 +1,4 @@
-import { AsyncThunkAction, ThunkAction } from '../app/store';
+import { ThunkAction } from '../app/store';
 import { requests } from '../services/ajax';
 import { Logout } from '../services/storage';
 
@@ -6,13 +6,14 @@ export enum ActionType {
     LoginStartedAction = 'LOGIN_STARTED',
     LoginCompletedAction = 'LOGIN_COMPLETED',
     LoginFailedAction = 'LOGIN_FAILED',
+    ClearErrorAction = 'LOGIN_RETRY',
 
     LogoutStartedAction = 'LOGOUT_STARTED',
     LogoutCompletedAction = 'LOGOUT_COMPLETED',
     LogoutFailedAction = 'LOGOUT_FAILED',
 }
 
-export type Action = LoginStartedAction | LoginCompletedAction | LoginFailedAction
+export type Action = LoginStartedAction | LoginCompletedAction | LoginFailedAction | ClearErrorAction
     | LogoutStartedAction | LogoutCompletedAction | LogoutFailedAction;
 
 export interface LoginStartedAction {
@@ -29,6 +30,10 @@ export interface LoginFailedAction {
     readonly error: Error;
 }
 
+export interface ClearErrorAction {
+    readonly type: ActionType.ClearErrorAction;
+}
+
 export interface LogoutStartedAction {
     readonly type: ActionType.LogoutStartedAction;
 }
@@ -43,18 +48,16 @@ export interface LogoutFailedAction {
     readonly error: Error;
 }
 
-export function login(code: string): AsyncThunkAction<Action, string> {
+export function clearError(): ThunkAction<Action> {
+    return dispatch => dispatch({type: ActionType.ClearErrorAction});
+}
+
+export function login(code: string): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.LoginStartedAction});
-        return requests.post('/otp', JSON.stringify({ code })).then(
-            result => {
-                dispatch({type: ActionType.LoginCompletedAction, sessionID: result.sessionID});
-                return result.sessionID;
-            },
-            reason => {
-                dispatch({type: ActionType.LoginFailedAction, error: reason});
-                throw reason;
-            }
+        requests.post('/otp', JSON.stringify({ code })).then(
+            result => dispatch({type: ActionType.LoginCompletedAction, sessionID: result.sessionID}),
+            reason => dispatch({type: ActionType.LoginFailedAction, error: reason})
         );
     }
 }
