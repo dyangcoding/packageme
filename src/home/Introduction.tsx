@@ -26,12 +26,12 @@ class Introduction extends React.Component {
 
     private renderIntroduction(): React.ReactNode {
         return (
-            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row px-2 md:px-5 py-8 justify-left md:bg-hero-pattern md:bg-contain md:bg-no-repeat md:bg-right">
-                <div className="flex md:hidden items-center justify-center px-5 py-8 w-full md:w-1/2">
+            <div className="container mx-auto max-w-6xl flex flex-col md:flex-row px-2 md:px-5 py-2 md:py-8 justify-left md:bg-hero-pattern md:bg-contain md:bg-no-repeat md:bg-right">
+                <div className="flex md:hidden items-center justify-center px-5 w-full md:w-1/2">
                     <img className="object-scale-down object-center rounded-lg h-96" src={deliveries} 
                         alt="packages delivery for home page introduction" />
                 </div>
-                <div className="flex-col my-4 md:my-8 px-5 py-8 w-full md:w-1/2">
+                <div className="flex-col my-4 md:my-8 px-5 py-2 md:py-8 w-full md:w-1/2">
                     <div className="text-3xl md:text-5xl font-extrabold tracking-tight">
                         Help finding packages.
                     </div>

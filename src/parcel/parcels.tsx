@@ -108,7 +108,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
                         placeholder="Search Name/Apartment number" onChange={this.onSearchInputChange} onKeyDown={this.onSearchInputKeyDown} />
                     {this.renderClearAction()}
                 </div>
-                <div className="ml-2 px-1">
+                <div className="px-1">
                     <button className="p-2 text-white rounded-lg bg-red-500 hover:bg-red-600" onClick={this.onSearchClick}>
                         Search
                     </button>
