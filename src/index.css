@@ -17,3 +17,14 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+@layer components {
+  .nav-btn {
+    @apply p-2 lg:px-4 md:mx-2 hover:bg-gray-200 hover:text-gray-700 rounded transition-colors duration-300
+  }
+
+  .nav-auth-btn {
+    @apply p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid 
+      md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0
+  }
+}

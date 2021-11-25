@@ -93,14 +93,13 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                     </div>
                     <div className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0" id="navbar-collapse">
                         <NavLink exact to="/" activeClassName="bg-indigo-500 text-white"
-                            className="p-2 lg:px-4 md:mx-2 hover:bg-gray-200 hover:text-gray-700 rounded transition-colors duration-300">
+                            className="nav-btn">
                             Home
                         </NavLink>
                         <NavLink to="/about" activeClassName="bg-indigo-500 text-white"
-                            className="p-2 lg:px-4 md:mx-2 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300">
+                            className="nav-btn">
                             About
                         </NavLink>
-    
                         {this.renderAuthAction()}  
                     </div>
                 </nav>
@@ -115,20 +114,18 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
 
     private renderLogin(): React.ReactNode {
         return (
-            <button onClick={this.onLoginClick} 
-                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0">
+            <button onClick={this.onLoginClick} className="nav-auth-btn">
                 Log in
             </button>
-        )
+        );
     }
 
     private renderLogout(): React.ReactNode {
         return (
-            <button onClick={this.onLogoutClick} 
-                className="p-2 lg:px-4 md:mx-2 text-white md:text-indigo-600 text-center md:border md:border-solid md:border-indigo-600 rounded hover:bg-indigo-600 hover:text-white transition-colors duration-300 mt-1 md:mt-0">
+            <button onClick={this.onLogoutClick} className="nav-auth-btn">
                 Log out
             </button>
-        )
+        );
     }
 
     private onLoginClick(event: React.MouseEvent<HTMLButtonElement>): void {
