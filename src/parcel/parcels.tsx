@@ -4,11 +4,11 @@ import { ParcelProperties } from '../models/parcel';
 import { AppState } from '../app/store';
 import { connect } from 'react-redux';
 import { loadParcels, searchParcels } from './actions';
-import ParcelEntry from './parcel-entry';
 import { Login } from '../auth/login';
 import empty from '../imgs/void.png';
 import { HeroIcon } from '../components/herocon-icon';
 import ReactTooltip from 'react-tooltip';
+import { ParcelEntry } from './parcel-entry';
 
 interface StateProps {
     readonly parcels: ReadonlyArray<ParcelProperties>;

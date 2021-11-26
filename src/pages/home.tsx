@@ -4,20 +4,21 @@ import ImageToText from '../home/image-to-text';
 import { ParcelList } from '../parcel/parcels';
 import { AppState } from '../app/store';
 import { connect } from 'react-redux';
+import { Toasts } from '../ui/toasts';
 
-interface StateProps {
+interface HomeProps {
     readonly sessionID: string;
 }
 
-class HomeComponent extends React.Component<StateProps> {
+class HomeComponent extends React.Component<HomeProps> {
     private parcelsContainer: React.RefObject<HTMLDivElement>;
 
-    constructor(props: StateProps) {
+    constructor(props: HomeProps) {
         super(props);
         this.parcelsContainer = React.createRef();
     }
 
-    public componentDidUpdate(prevProps: StateProps): void {
+    public componentDidUpdate(prevProps: HomeProps): void {
         if (!prevProps.sessionID && this.props.sessionID && this.parcelsContainer.current) {
             this.parcelsContainer.current.scrollIntoView({behavior: 'smooth'});
         }
@@ -33,12 +34,13 @@ class HomeComponent extends React.Component<StateProps> {
                 <div ref={this.parcelsContainer}>
                     <ParcelList />
                 </div>
+                <Toasts />
             </Fragment>
         );
     }
 }
 
-function mapStateToProps(state: AppState): StateProps {
+function mapStateToProps(state: AppState): HomeProps {
     return {
         sessionID: state.users.sessionID,
     };
