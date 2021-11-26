@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { Feedback } from './feedback';
 
 interface FooterProps {}
@@ -25,7 +26,7 @@ class Footer extends React.Component<FooterProps, FooterState> {
                         © {new Date().getFullYear()} {process.env.REACT_APP_SITE_NAME} All Rights Reserved.
                     </div>
                     <div className="flex text-sm text-indigo-400 py-2 md:py-0">
-                        <a href="/legal" className="px-2 hover:underline">Terms Of Use</a>
+                        <NavLink to="/legal" className="px-2 hover:underline">Terms Of Use</NavLink>
                         <button className="px-2 hover:underline" onClick={this.onContactClick}>Contact</button>
                         <button className="px-2 hover:underline" onClick={this.onToggleDialog}>Feedback</button>
                     </div>

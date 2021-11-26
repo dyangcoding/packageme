@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Switch } from 'react-router-dom';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { AppState } from '../app/store';
 import { logout } from '../auth/actions';
@@ -44,7 +44,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     public render(): React.ReactNode {
         const toggleMenu = this.state.menuToggled;
         return (
-            <Router>
+            <Fragment>
                 {toggleMenu ? this.renderMobileNavbar() : this.renderNavbar()}
                 <Switch>
                     <Route exact path="/">
@@ -57,7 +57,7 @@ class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
                         <Legal />
                     </Route>
                 </Switch>
-            </Router>
+            </Fragment>
         );
     }
 
