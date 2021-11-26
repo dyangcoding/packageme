@@ -2,10 +2,17 @@ import React, { Fragment } from 'react';
 import { ParcelProperties } from '../models/parcel';
 import * as INFO from '../utils/string-utils';
 import moment from "moment";
-import Tooltip from './tooltip-wrapper';
+import Tooltip from '../components/tooltip-wrapper';
 import { insertParcels } from '../app/mongo-client';
+import { ToastProperties } from '../ui/toast';
+import { addToast } from '../ui/actions';
+import { connect } from 'react-redux';
 
-interface ParcelProps {}
+interface DispatchProps {
+    readonly addToast: (toast: ToastProperties) => void;
+}
+
+interface ParcelProps extends DispatchProps {}
 
 interface ParcelState {
     readonly info: string;
@@ -13,16 +20,18 @@ interface ParcelState {
     readonly checked: boolean;
     readonly inputError?: string;
     readonly insertionError?: string;
+    readonly showToast: boolean;
 }
 
-class ParcelInput extends React.Component<ParcelProps, ParcelState> {
+class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
     constructor(props: ParcelProps) {
         super(props);
 
         this.state = { 
             info: '', 
             remark: '', 
-            checked: false 
+            checked: false,
+            showToast: false,
         };
 
         this.onInfoChange = this.onInfoChange.bind(this);
@@ -129,6 +138,16 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
 
     private reset(): void {
         this.setState({info: '', remark: '', checked: false});
+        this.props.addToast(this.builToast());
+    }
+
+    private builToast(): ToastProperties {
+        return {
+            id: 1,
+            title: 'Package Information',
+            message: 'Thanks for helping the Neighbors.',
+            mode: 'success'
+        } as ToastProperties;
     }
 
     private buildParcel(): ParcelProperties {
@@ -141,4 +160,10 @@ class ParcelInput extends React.Component<ParcelProps, ParcelState> {
     }
 }
 
-export default ParcelInput;
+function mapDispatchToProps(dispatch: any): DispatchProps {
+    return {
+        addToast: (toast: ToastProperties) => dispatch(addToast(toast)),
+    }
+}
+
+export const ParcelInput = connect(null, mapDispatchToProps)(ParcelInputComponent);

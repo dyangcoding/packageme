@@ -1,5 +1,5 @@
 import React from 'react';
-import Feedback from '../components/feedback';
+import { Feedback } from './feedback';
 
 interface FooterProps {}
 

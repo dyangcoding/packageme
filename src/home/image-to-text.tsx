@@ -5,7 +5,7 @@ import { createWorker } from 'tesseract.js';
 import Tooltip from '../components/tooltip-wrapper';
 import * as INFO from '../utils/string-utils';
 import Spinner from '../components/spinner';
-import ParcelInput from '../components/parcel-input';
+import { ParcelInput } from './parcel-input';
 
 interface ImageToTextProps {}
 

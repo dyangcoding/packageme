@@ -1,9 +1,18 @@
 import React from "react";
 import { XIcon } from '@heroicons/react/outline';
+import { ToastProperties } from "../ui/toast";
+import { addToast } from "../ui/actions";
+import { connect } from "react-redux";
 
-interface FeedbackProps {
+interface OwnProps {
     readonly onToggleDialog: () => void;
 }
+
+interface DispatchProps {
+    readonly addToast: (toast: ToastProperties) => void;
+}
+
+interface FeedbackProps extends OwnProps, DispatchProps {}
 
 interface FeedbackState {
     readonly email: string;
@@ -11,7 +20,7 @@ interface FeedbackState {
     readonly submitError?: string;
 }
 
-class Feedback extends React.Component<FeedbackProps, FeedbackState> {
+class FeedbackComponent extends React.Component<FeedbackProps, FeedbackState> {
     constructor(props: FeedbackProps) {
         super(props);
 
@@ -106,9 +115,29 @@ class Feedback extends React.Component<FeedbackProps, FeedbackState> {
             headers: {'content-type': 'application/x-www-form-urlencoded'},
             body: this.encode()
         })
-        .then(() => this.props.onToggleDialog())
+        .then(() => this.onSuccessSubmit())
         .catch(error => this.setState({submitError: error}))
+    }
+
+    private onSuccessSubmit(): void {
+        this.props.onToggleDialog();
+        this.props.addToast(this.buildToast());
+    }
+
+    private buildToast(): ToastProperties {
+        return {
+            id: 3,
+            title: 'Feedback',
+            message: 'Thank for your feedback, we will get back to you soon.',
+            mode: 'success'
+        } as ToastProperties;
     }
 }
 
-export default Feedback;
+function mapDispatchToProps(dispatch: any): DispatchProps {
+    return {
+        addToast: (toast: ToastProperties) => dispatch(addToast(toast)),
+    }
+}
+
+export const Feedback = connect(null, mapDispatchToProps)(FeedbackComponent);
