@@ -1,9 +1,9 @@
 import { Status } from '../app/store';
-import { ParcelProperties, UpstreamParcelProperties } from '../models/parcel';
+import { UpstreamParcelProperties } from '../models/parcel';
 import { Action, ActionType } from './actions';
 
 interface ParcelState {
-    readonly value: ReadonlyArray<ParcelProperties>,
+    readonly value: ReadonlyArray<UpstreamParcelProperties>,
     readonly loading: Status,
     readonly error: string | undefined,
 };

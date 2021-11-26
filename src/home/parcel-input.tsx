@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { ParcelProperties } from '../models/parcel';
 import * as INFO from '../utils/string-utils';
 import moment from "moment";
 import Tooltip from '../components/tooltip-wrapper';
@@ -7,6 +6,7 @@ import { insertParcels } from '../app/mongo-client';
 import { ToastProperties } from '../ui/toast';
 import { addToast } from '../ui/actions';
 import { connect } from 'react-redux';
+import { ParcelProperties } from '../models/parcel';
 
 interface DispatchProps {
     readonly addToast: (toast: ToastProperties) => void;

@@ -8,7 +8,7 @@ import { Action as ParcelsAction, ActionType as ParcelsActionType } from '../par
 import { userReducer } from '../auth/reducer';
 import { parcelReducer } from '../parcel/reducer';
 import { parcelCollection } from './mongo-client';
-import { toParcelProperties, UpstreamParcelProperties } from '../models/parcel';
+import { UpstreamParcelProperties } from '../models/parcel';
 import { uiReducer } from '../ui/reducer';
 export type ThunkDispatch<A extends Action=Action> = ReduxThunkDispatch<AppState, never, A>
 export type Status = 'idle' | 'loading' | 'inserting' | 'updating' | 'deleting' | 'completed' | 'failed';
@@ -47,7 +47,7 @@ const parcelsPipeline = [
             const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
             if (fullDocument) {
               store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
-              store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: toParcelProperties(fullDocument)});
+              store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: fullDocument});
             } else {
               store.dispatch({type: ParcelsActionType.ParcelInsertingFailedAction, error: 'Can not perform Parcel Insertion.'})
             }
@@ -57,7 +57,7 @@ const parcelsPipeline = [
             const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.UpdateEvent<UpstreamParcelProperties>;
             if (fullDocument) {
               store.dispatch({type: ParcelsActionType.ParcelUpdatingStartedAction});
-              store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: toParcelProperties(fullDocument)});
+              store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: fullDocument});
             } else {
               store.dispatch({type: ParcelsActionType.ParcelUpdatingFailedAction, error: 'Can not perform Parcel Update.'})
             }

@@ -45,8 +45,8 @@ export async function sessionCollection() {
 export async function fetchParcels() {
     const collection = await parcelCollection();
     return collection
-        .aggregate(pipeline)
-        .then(tweets => tweets as Array<ParcelProperties>);
+        .find()
+        .then(tweets => tweets as Array<UpstreamParcelProperties>);
 }
 
 export async function filterParcels(searchTerm: string) {
@@ -81,10 +81,10 @@ export async function insertParcels(parcels: ReadonlyArray<ParcelProperties>) {
     return collection.insertMany(documents);
 }
 
-export async function collectParcel(parcel: ParcelProperties) {
+export async function collectParcel(parcel: UpstreamParcelProperties) {
     const collection = await parcelCollection();
     return collection.updateOne(
-        { info: parcel.info },
+        { _id: parcel._id },
         { $set: {collected: true} }  
     );
 }

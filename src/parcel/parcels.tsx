@@ -1,17 +1,17 @@
 import React, { Fragment } from 'react';
 import { SearchIcon, CheckIcon, InboxIcon, UserCircleIcon } from '@heroicons/react/outline';
-import { ParcelProperties } from '../models/parcel';
 import { AppState } from '../app/store';
 import { connect } from 'react-redux';
 import { loadParcels, searchParcels } from './actions';
 import { Login } from '../auth/login';
 import empty from '../imgs/void.png';
-import { HeroIcon } from '../components/herocon-icon';
 import ReactTooltip from 'react-tooltip';
 import { ParcelEntry } from './parcel-entry';
+import HeroIcon from '../components/herocon-icon';
+import { UpstreamParcelProperties } from '../models/parcel';
 
 interface StateProps {
-    readonly parcels: ReadonlyArray<ParcelProperties>;
+    readonly parcels: ReadonlyArray<UpstreamParcelProperties>;
     readonly isLoading: string;
     readonly error: string | undefined;
     readonly sessionID: string;
@@ -19,7 +19,7 @@ interface StateProps {
 
 interface DispatchProps {
     readonly onLoad: () => void;
-    readonly onSearchInput: (searchTerm: string) => ReadonlyArray<ParcelProperties>;
+    readonly onSearchInput: (searchTerm: string) => ReadonlyArray<UpstreamParcelProperties>;
 }
 
 interface ParcelListState {

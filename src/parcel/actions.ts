@@ -1,6 +1,6 @@
 import { fetchParcels, filterParcels } from '../app/mongo-client';
 import { AsyncThunkAction, ThunkAction } from '../app/store';
-import { ParcelProperties, toParcelProperties } from '../models/parcel';
+import { UpstreamParcelProperties } from '../models/parcel';
 
 export enum ActionType {
     LoadParcelsStartedAction = 'LOAD_PARCELS_STARTED',
@@ -31,7 +31,7 @@ export interface LoadParcelsStartedAction {
 
 export interface LoadParcelsCompletedAction {
     readonly type: ActionType.LoadParcelsCompletedAction;
-    readonly parcels: ReadonlyArray<ParcelProperties>;
+    readonly parcels: ReadonlyArray<UpstreamParcelProperties>;
 }
 
 export interface LoadParcelsFailedAction {
@@ -45,7 +45,7 @@ export interface ParcelInsertingStartedAction {
 
 export interface ParcelInsertingCompletedAction {
     readonly type: ActionType.ParcelInsertingCompletedAction;
-    readonly parcel: ParcelProperties;
+    readonly parcel: UpstreamParcelProperties;
 }
 
 export interface ParcelInsertingFailedAction {
@@ -59,7 +59,7 @@ export interface ParcelUpdatingStartedAction {
 
 export interface ParcelUpdatingCompletedAction {
     readonly type: ActionType.ParcelUpdatingCompletedAction;
-    readonly parcel: ParcelProperties;
+    readonly parcel: UpstreamParcelProperties;
 }
 
 export interface ParcelUpdatingFailedAction {
@@ -73,7 +73,7 @@ export interface SearchParcelsStartedAction {
 
 export interface SearchParcelsCompletedAction {
     readonly type: ActionType.SearchParcelsCompletedAction;
-    readonly parcels: ReadonlyArray<ParcelProperties>;
+    readonly parcels: ReadonlyArray<UpstreamParcelProperties>;
 }
 
 export interface SearchParcelsFailedAction {
@@ -91,12 +91,12 @@ export function loadParcels(): ThunkAction<Action> {
     }
 }
 
-export function searchParcels(searchTerm: string): AsyncThunkAction<Action, ReadonlyArray<ParcelProperties>> {
+export function searchParcels(searchTerm: string): AsyncThunkAction<Action, ReadonlyArray<UpstreamParcelProperties>> {
     return dispatch => {
         dispatch({type: ActionType.SearchParcelsStartedAction});
         return filterParcels(searchTerm).then(
             results => {
-                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: results.map(toParcelProperties)});
+                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: results});
                 return results;
             }, 
             reason => {
@@ -108,7 +108,7 @@ export function searchParcels(searchTerm: string): AsyncThunkAction<Action, Read
 }
 
 // sort the parcels reversely according the diliver date
-function sortParcels(parcels: ParcelProperties[]): ParcelProperties[] {
+function sortParcels(parcels: UpstreamParcelProperties[]): UpstreamParcelProperties[] {
     if (!parcels) {
         return [];
     }
