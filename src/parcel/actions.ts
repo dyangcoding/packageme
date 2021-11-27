@@ -104,7 +104,7 @@ export function loadParcels(): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.LoadParcelsStartedAction});
         fetchParcels().then(
-            results => dispatch({type: ActionType.LoadParcelsCompletedAction, parcels: sortParcels(results.map(convert))}),
+            results => dispatch({type: ActionType.LoadParcelsCompletedAction, parcels: results.map(convert)}),
             reason => dispatch({type: ActionType.LoadParcelsFailedAction, error: reason})
         );
     }
@@ -125,13 +125,4 @@ export function searchParcels(searchTerm: string): AsyncThunkAction<Action, Read
             } 
         );
     }
-}
-
-// sort the parcels reversely according the deliver date
-function sortParcels(parcels: ParcelProperties[]): ParcelProperties[] {
-    if (!parcels) return [];
-    return parcels.sort((p1, p2) => {
-        if (!p1.deliverDate || !p2.deliverDate) return 0;
-        return new Date(p2.deliverDate).getTime() - new Date(p1.deliverDate).getTime();
-    });
 }
