@@ -30,9 +30,11 @@ async function getMongoDB() {
 
 export async function parcelCollection() {
     const mongoDb = await getMongoDB();
+    const dbName = process.env.REACT_APP_REALM_APP_DB_NAME || '';
+    const collectionName = process.env.REACT_APP_REALM_APP_DB_COLLECTION_NAME || '';
     return mongoDb
-        .db('findMyPackages')
-        .collection<UpstreamParcelProperties>('parcels');
+        .db(dbName)
+        .collection<UpstreamParcelProperties>(collectionName);
 }
 
 export async function fetchParcels() {
