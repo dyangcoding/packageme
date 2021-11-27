@@ -182,7 +182,11 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
     }
 
     private onSearchInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({searchTerm: event.target.value});
+        this.setState({searchTerm: event.target.value}, () => {
+            if (!this.state.searchTerm) {
+                this.props.onSearchInput('');
+            }
+        });
     }
 
     private onSearchInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
