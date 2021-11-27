@@ -1,15 +1,15 @@
 import { Status } from '../app/store';
-import { UpstreamParcelProperties } from '../models/parcel';
+import { ParcelProperties } from '../models/parcel';
 import { Action, ActionType } from './actions';
 
 interface ParcelState {
-    readonly value: ReadonlyArray<UpstreamParcelProperties>,
+    readonly value: ReadonlyArray<ParcelProperties>,
     readonly loading: Status,
     readonly error: string | undefined,
 };
 
 const initialState: ParcelState = {
-    value: [] as UpstreamParcelProperties[],
+    value: [] as ParcelProperties[],
     loading: 'idle',
     error: undefined
 };
@@ -32,10 +32,17 @@ export function parcelReducer(state: ParcelState = initialState, action: Action)
         case ActionType.ParcelUpdatingStartedAction:
             return {...state, loading: 'updating'};
         case ActionType.ParcelUpdatingCompletedAction:
-            const removed = state.value.filter(parcel => parcel.info !== action.parcel.info);
-            const result = [action.parcel].concat(removed);
+            const updated = state.value.filter(parcel => parcel.info !== action.parcel.info);
+            const result = [action.parcel].concat(updated);
             return {...state, loading: 'completed', value: result};
         case ActionType.ParcelUpdatingFailedAction:
+            return {...state, loading: 'failed', error: action.error.message};
+        case ActionType.ParcelDeletingStartedAction:
+            return {...state, loading: 'deleting'};
+        case ActionType.ParcelDeletingCompletedAction:
+            const removed = state.value.filter(parcel => parcel._id !== action._id);
+            return {...state, loading: 'completed', value: removed};
+        case ActionType.ParcelDeletingFailedAction:
             return {...state, loading: 'failed', error: action.error.message};
         case ActionType.SearchParcelsStartedAction:
             return {...state, loading: 'loading'};

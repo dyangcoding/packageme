@@ -1,19 +1,7 @@
 import * as Realm from 'realm-web';
 import { ParcelProperties, UpstreamParcelProperties } from '../models/parcel';
 import { UpstreamSessionProperties } from '../models/session';
-
-/*
-Modify Mongo Collection Output using Aggregation Pipelines
-You can control collection output by providing an array of one or more of the following pipeline stages when configuring the change stream:
-$match, $project, $addFields, $replaceRoot, $redact
-See Change Events for more information on the change stream response document format.
-https://docs.mongodb.com/manual/reference/change-events/#change-stream-output
-*/
-const pipeline = [
-    {
-      $project: { '_id': 0 }
-    }
-];
+import { ObjectId } from 'bson';
 
 const REALM_APP_ID = process.env.REACT_APP_REALM_APP_ID || '';
 const app = new Realm.App({ id: REALM_APP_ID });
@@ -81,10 +69,10 @@ export async function insertParcels(parcels: ReadonlyArray<ParcelProperties>) {
     return collection.insertMany(documents);
 }
 
-export async function collectParcel(parcel: UpstreamParcelProperties) {
+export async function collectParcel(parcel: ParcelProperties) {
     const collection = await parcelCollection();
     return collection.updateOne(
-        { _id: parcel._id },
+        { _id: new ObjectId(parcel._id) },
         { $set: {collected: true} }  
     );
 }

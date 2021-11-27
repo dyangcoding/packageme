@@ -1,6 +1,6 @@
 import { fetchParcels, filterParcels } from '../app/mongo-client';
 import { AsyncThunkAction, ThunkAction } from '../app/store';
-import { UpstreamParcelProperties } from '../models/parcel';
+import { convert, ParcelProperties } from '../models/parcel';
 
 export enum ActionType {
     LoadParcelsStartedAction = 'LOAD_PARCELS_STARTED',
@@ -15,6 +15,10 @@ export enum ActionType {
     ParcelUpdatingCompletedAction = 'PARCEL_UPDATING_COMPLETED',
     ParcelUpdatingFailedAction = 'PARCEL_UPDATING_FAILED',
 
+    ParcelDeletingStartedAction = 'PARCEL_DELETING_STARTED',
+    ParcelDeletingCompletedAction = 'PARCEL_DELETING_COMPLETED',
+    ParcelDeletingFailedAction = 'PARCEL_DELETING_FAILED',
+
     SearchParcelsStartedAction = 'SEARCH_PARCELS_STARTED',
     SearchParcelsCompletedAction = 'SEARCH_PARCELS_COMPLETED',
     SearchParcelsFailedAction = 'SEARCH_PARCELS_FAILED'
@@ -23,6 +27,7 @@ export enum ActionType {
 export type Action = LoadParcelsStartedAction | LoadParcelsCompletedAction | LoadParcelsFailedAction |
             ParcelInsertingStartedAction | ParcelInsertingCompletedAction | ParcelInsertingFailedAction |
             ParcelUpdatingStartedAction | ParcelUpdatingCompletedAction | ParcelUpdatingFailedAction |
+            ParcelDeletingStartedAction | ParcelDeletingCompletedAction | ParcelDeletingFailedAction |
             SearchParcelsStartedAction | SearchParcelsCompletedAction | SearchParcelsFailedAction;
 
 export interface LoadParcelsStartedAction {
@@ -31,7 +36,7 @@ export interface LoadParcelsStartedAction {
 
 export interface LoadParcelsCompletedAction {
     readonly type: ActionType.LoadParcelsCompletedAction;
-    readonly parcels: ReadonlyArray<UpstreamParcelProperties>;
+    readonly parcels: ReadonlyArray<ParcelProperties>;
 }
 
 export interface LoadParcelsFailedAction {
@@ -45,7 +50,7 @@ export interface ParcelInsertingStartedAction {
 
 export interface ParcelInsertingCompletedAction {
     readonly type: ActionType.ParcelInsertingCompletedAction;
-    readonly parcel: UpstreamParcelProperties;
+    readonly parcel: ParcelProperties;
 }
 
 export interface ParcelInsertingFailedAction {
@@ -59,11 +64,25 @@ export interface ParcelUpdatingStartedAction {
 
 export interface ParcelUpdatingCompletedAction {
     readonly type: ActionType.ParcelUpdatingCompletedAction;
-    readonly parcel: UpstreamParcelProperties;
+    readonly parcel: ParcelProperties;
 }
 
 export interface ParcelUpdatingFailedAction {
     readonly type: ActionType.ParcelUpdatingFailedAction;
+    readonly error: Error;
+}
+
+export interface ParcelDeletingStartedAction {
+    readonly type: ActionType.ParcelDeletingStartedAction;
+}
+
+export interface ParcelDeletingCompletedAction {
+    readonly type: ActionType.ParcelDeletingCompletedAction;
+    readonly _id: string;
+}
+
+export interface ParcelDeletingFailedAction {
+    readonly type: ActionType.ParcelDeletingFailedAction;
     readonly error: Error;
 }
 
@@ -73,7 +92,7 @@ export interface SearchParcelsStartedAction {
 
 export interface SearchParcelsCompletedAction {
     readonly type: ActionType.SearchParcelsCompletedAction;
-    readonly parcels: ReadonlyArray<UpstreamParcelProperties>;
+    readonly parcels: ReadonlyArray<ParcelProperties>;
 }
 
 export interface SearchParcelsFailedAction {
@@ -85,19 +104,20 @@ export function loadParcels(): ThunkAction<Action> {
     return dispatch => {
         dispatch({type: ActionType.LoadParcelsStartedAction});
         fetchParcels().then(
-            results => dispatch({type: ActionType.LoadParcelsCompletedAction, parcels: sortParcels(results)}),
+            results => dispatch({type: ActionType.LoadParcelsCompletedAction, parcels: sortParcels(results.map(convert))}),
             reason => dispatch({type: ActionType.LoadParcelsFailedAction, error: reason})
         );
     }
 }
 
-export function searchParcels(searchTerm: string): AsyncThunkAction<Action, ReadonlyArray<UpstreamParcelProperties>> {
+export function searchParcels(searchTerm: string): AsyncThunkAction<Action, ReadonlyArray<ParcelProperties>> {
     return dispatch => {
         dispatch({type: ActionType.SearchParcelsStartedAction});
         return filterParcels(searchTerm).then(
             results => {
-                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: results});
-                return results;
+                const parcels = results.map(convert);
+                dispatch({type: ActionType.SearchParcelsCompletedAction, parcels: parcels});
+                return parcels;
             }, 
             reason => {
                 dispatch({type: ActionType.SearchParcelsFailedAction, error: reason});
@@ -107,15 +127,11 @@ export function searchParcels(searchTerm: string): AsyncThunkAction<Action, Read
     }
 }
 
-// sort the parcels reversely according the diliver date
-function sortParcels(parcels: UpstreamParcelProperties[]): UpstreamParcelProperties[] {
-    if (!parcels) {
-        return [];
-    }
+// sort the parcels reversely according the deliver date
+function sortParcels(parcels: ParcelProperties[]): ParcelProperties[] {
+    if (!parcels) return [];
     return parcels.sort((p1, p2) => {
-        if (!p1.deliverDate || !p2.deliverDate) {
-            return 0;
-        }
+        if (!p1.deliverDate || !p2.deliverDate) return 0;
         return new Date(p2.deliverDate).getTime() - new Date(p1.deliverDate).getTime();
     });
 }

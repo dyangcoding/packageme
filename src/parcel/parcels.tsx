@@ -8,10 +8,10 @@ import empty from '../imgs/void.png';
 import ReactTooltip from 'react-tooltip';
 import { ParcelEntry } from './parcel-entry';
 import HeroIcon from '../components/herocon-icon';
-import { UpstreamParcelProperties } from '../models/parcel';
+import { ParcelProperties } from '../models/parcel';
 
 interface StateProps {
-    readonly parcels: ReadonlyArray<UpstreamParcelProperties>;
+    readonly parcels: ReadonlyArray<ParcelProperties>;
     readonly isLoading: string;
     readonly error: string | undefined;
     readonly sessionID: string;
@@ -19,7 +19,7 @@ interface StateProps {
 
 interface DispatchProps {
     readonly onLoad: () => void;
-    readonly onSearchInput: (searchTerm: string) => ReadonlyArray<UpstreamParcelProperties>;
+    readonly onSearchInput: (searchTerm: string) => ReadonlyArray<ParcelProperties>;
 }
 
 interface ParcelListState {

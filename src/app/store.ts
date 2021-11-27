@@ -8,7 +8,7 @@ import { Action as ParcelsAction, ActionType as ParcelsActionType } from '../par
 import { userReducer } from '../auth/reducer';
 import { parcelReducer } from '../parcel/reducer';
 import { parcelCollection } from './mongo-client';
-import { UpstreamParcelProperties } from '../models/parcel';
+import { convert, UpstreamParcelProperties } from '../models/parcel';
 import { uiReducer } from '../ui/reducer';
 export type ThunkDispatch<A extends Action=Action> = ReduxThunkDispatch<AppState, never, A>
 export type Status = 'idle' | 'loading' | 'inserting' | 'updating' | 'deleting' | 'completed' | 'failed';
@@ -32,11 +32,11 @@ export type AppDispatch = typeof store.dispatch;
 
 const parcelsPipeline = [
     { 
-      $in: [ 'insert', 'update' ] 
+      $in: [ 'insert', 'update', 'delete' ] 
     }
 ];
 
-// TODO: also subscribe to DELETE Event if any inappropriate parcel information was submitted.
+// TODO: also subscribe to db dropped events.
 
 (() => {
   parcelCollection()
@@ -47,9 +47,9 @@ const parcelsPipeline = [
             const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.InsertEvent<UpstreamParcelProperties>;
             if (fullDocument) {
               store.dispatch({type: ParcelsActionType.ParcelInsertingStartedAction});
-              store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: fullDocument});
+              store.dispatch({type: ParcelsActionType.ParcelInsertingCompletedAction, parcel: convert(fullDocument)});
             } else {
-              store.dispatch({type: ParcelsActionType.ParcelInsertingFailedAction, error: 'Can not perform Parcel Insertion.'})
+              store.dispatch({type: ParcelsActionType.ParcelInsertingFailedAction, error: 'Can not perform Parcel inserting Action.'})
             }
             break;
           }
@@ -57,9 +57,19 @@ const parcelsPipeline = [
             const { fullDocument } = parcel as globalThis.Realm.Services.MongoDB.UpdateEvent<UpstreamParcelProperties>;
             if (fullDocument) {
               store.dispatch({type: ParcelsActionType.ParcelUpdatingStartedAction});
-              store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: fullDocument});
+              store.dispatch({type: ParcelsActionType.ParcelUpdatingCompletedAction, parcel: convert(fullDocument)});
             } else {
-              store.dispatch({type: ParcelsActionType.ParcelUpdatingFailedAction, error: 'Can not perform Parcel Update.'})
+              store.dispatch({type: ParcelsActionType.ParcelUpdatingFailedAction, error: 'Can not perform Parcel updating Action.'})
+            }
+            break;
+          }
+          case 'delete': {
+            const { documentKey } = parcel as globalThis.Realm.Services.MongoDB.DeleteEvent<UpstreamParcelProperties>;
+            if (documentKey) {
+              store.dispatch({type: ParcelsActionType.ParcelDeletingStartedAction});
+              store.dispatch({type: ParcelsActionType.ParcelDeletingCompletedAction, _id: documentKey._id.toHexString()});
+            } else {
+              store.dispatch({type: ParcelsActionType.ParcelDeletingFailedAction, error: 'Can not perform Parcel deleting Action.'})
             }
             break;
           }
