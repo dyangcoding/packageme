@@ -1,46 +1,95 @@
-# Getting Started with Create React App
+# Getting Started with Packageme
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+###### **Introduction**
 
-## Available Scripts
+[Packageme](https://packageme.netlify.app/) aims to help local community to find delivered packages more easily.
 
-In the project directory, you can run:
+## Getting Started
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+make sure you have Node.js installed, otherwise head to [Node.js official web site](https://nodejs.org/en/).
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Installing
 
-### `npm test`
+First, check out the source code:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone https://github.com/dyangcoding/packageme.git
+```
 
-### `npm run build`
+Then install all dependencies in the project's root folder:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+``` bash
+# move into project folder
+cd packageme
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# install dependencies, this may take a moment
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Setup Environments Variables
 
-### `npm run eject`
+create a .env file at the project root folder which contains following variables:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+REACT_APP_CONTACT_EMAIL=YOUR_CONTACT_EMAIL
+REACT_APP_REALM_APP_ID=YOUR_REALM_ID
+REACT_APP_SITE_NAME=YOUR_SITE_NAME
+REACT_APP_TOTP_BASE_URL=YOUR_TOTP_BASE_URL
+REACT_APP_TOTP_BASE_URL=YOUR_SECRET
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Note that variable name must start with 'REACT_APP_', this exposes the variables to React Application. 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Enviroment Variables that are supposed to be kept secret should not be pushed to the repository. 
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## MongoDB Realm
 
-## Learn More
+Packageme requires at the moment basic CRUD Actions. One could set up a backend server providing this service accordingly, 
+packageme utilises [MongoDB Realm](https://docs.mongodb.com/realm/cloud) as a backend service instead.
+MongoDB provides real-time data updating to all connected clients using [Change Streams](https://docs.mongodb.com/manual/changeStreams/).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The REACT_APP_REALM_APP_ID is generated once the project setup is accomplished at MongoDB Realm. More under [Find Project ID](https://docs.mongodb.com/realm/get-started/find-your-project-or-app-id/).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Netlfiy Serverless functions
+
+Neighbors in the local community could upload package's informations which could contain personal informations that one does not want to be public exposed.
+In order to protect user privacy packageme needs some sort of authentication. The traditional Email/Password would be a overkill, 
+instead A [Time-Based One-Time Password (TOTP)](https://en.wikipedia.org/wiki/Time-based_One-Time_Password) is implemented.
+
+One might have noticed that Packageme is deployed at the [Netlify](https://www.netlify.com). Beside easy deployment provides Netlify also [serverless functions](https://www.netlify.com/products/functions/) which is ideal for the purpose of verifying TOTP that user supplied.
+
+The REACT_APP_TOTP_BASE_URL and REACT_APP_TOTP_BASE_URL are used for the TOTP. More about the Implementation under [Two Factor Authentication with Node and React](https://medium.com/onfrontiers-engineering/two-factor-authentication-flow-with-node-and-react-7cbdf249f13).
+
+## Netlify forms
+
+To collect user feedbacks packageme takes advantage of [Netlify forms](https://docs.netlify.com/forms/setup/).
+
+## Netlify Dev
+
+You are good to go if the project is properly set up according [Netlify Dev](https://docs.netlify.com/cli/get-started/?_gl=1%2ad2vv6m%2a_gcl_aw%2aR0NMLjE2MzgwMDY5NzQuQ2owS0NRaUF5NGVOQmhDYUFSSXNBRkRWdEkxbThta0thRy1WSWlnWFFTYWR0bjdDSmE4UzhIbU0zaVJQOWl1Rl9fNnFuRlRWZGE0YTRaWWFBaC1pRUFMd193Y0I.&_ga=2.19472120.1593523262.1638004948-1792198658.1638004948&_gac=1.187053914.1638006974.Cj0KCQiAy4eNBhCaARIsAFDVtI1m8mkKaG-VIigXQSadtn7CJa8S8HmM3iRP9iuF__6qnFTVda4a4ZYaAh-iEALw_wcB#netlify-dev). 
+
+Run the following command to start local server:
+
+``` bash
+# serve with hot reload at localhost:3000
+netlify dev
+```
+
+Now Packageme is listening on http://localhost:8888
+
+## Build With
+* [React.js](https://nuxtjs.org/)
+* [React Redux](https://react-redux.js.org/)
+* [MongoDB Realm](https://www.mongodb.com/realm)
+* [Tailwindcss](https://tailwindcss.com/)
+
+
+## Deploy Using
+* [Netlify](https://www.netlify.com)
+
+
+## License
+
+Do whatever you want with the source code.
