@@ -4,7 +4,6 @@ import ImageToText from '../home/image-to-text';
 import { ParcelList } from '../parcel/parcels';
 import { AppState } from '../app/store';
 import { connect } from 'react-redux';
-import { Toasts } from '../ui/toasts';
 
 interface HomeProps {
     readonly sessionID: string;
@@ -34,7 +33,6 @@ class HomeComponent extends React.Component<HomeProps> {
                 <div ref={this.parcelsContainer}>
                     <ParcelList />
                 </div>
-                <Toasts />
             </Fragment>
         );
     }
