@@ -48,6 +48,13 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
 
     public componentDidMount(): void {
         this.props.onLoad();
+        const inputData = localStorage.getItem('searchTerms');
+        if (inputData) {
+            const input = JSON.parse(inputData);
+            this.setState({
+                searchTerm: input.searchTerms,
+            });
+        }
     }
 
     public render(): React.ReactNode {
@@ -178,15 +185,23 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
 
     private onClearSearchInput(): void {
         this.setState({searchTerm: ''});
+        localStorage.removeItem('searchTerms');
         this.props.onSearchInput('');
     }
 
     private onSearchInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.setState({searchTerm: event.target.value}, () => {
-            if (!this.state.searchTerm) {
+            if (this.state.searchTerm) {
+                this.setStorage();
+            } else {
                 this.props.onSearchInput('');
+                localStorage.removeItem('searchTerms');
             }
         });
+    }
+
+    private setStorage(): void {
+        localStorage.setItem('searchTerms', JSON.stringify({searchTerms: this.state.searchTerm}));
     }
 
     private onSearchInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {

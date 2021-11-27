@@ -17,10 +17,9 @@ interface ParcelProps extends DispatchProps {}
 interface ParcelState {
     readonly info: string;
     readonly remark: string;
-    readonly checked: boolean;
+    readonly termsAccepted: boolean;
     readonly inputError?: string;
     readonly insertionError?: string;
-    readonly showToast: boolean;
 }
 
 class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
@@ -30,14 +29,25 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
         this.state = { 
             info: '', 
             remark: '', 
-            checked: false,
-            showToast: false,
+            termsAccepted: false,
         };
 
         this.onInfoChange = this.onInfoChange.bind(this);
         this.onRemarkChange = this.onRemarkChange.bind(this);
         this.onTermOfUseChange = this.onTermOfUseChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    public componentDidMount(): void {
+        const inputData = localStorage.getItem('inputData');
+        if (inputData) {
+            const input = JSON.parse(inputData);
+            this.setState({
+                info: input.info,
+                remark: input.remark,
+                termsAccepted: input.termsAccepted,
+            });
+        }
     }
 
     public render(): React.ReactNode {
@@ -84,7 +94,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
         return (
             <div className="mt-2">
                 <div className="flex items-center my-2">
-                    <input id="term-of-use" name="term-of-use" type="checkbox" checked={this.state.checked} onChange={this.onTermOfUseChange}
+                    <input id="term-of-use" name="term-of-use" type="checkbox" checked={this.state.termsAccepted} onChange={this.onTermOfUseChange}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
                     <label htmlFor="term-of-use" className="ml-2 block text-sm text-gray-500">
                         You are agree with the <a href="/legal" className="underline">Terms of Use</a>.
@@ -100,12 +110,12 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
 
     private onInfoChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.clear();
-        this.setState({info: event.target.value});
+        this.setState({info: event.target.value}, () => this.setStorage());
     }
 
     private onRemarkChange(event: React.ChangeEvent<HTMLInputElement>): void {
         this.clear();
-        this.setState({remark: event.target.value});
+        this.setState({remark: event.target.value}, () => this.setStorage());
     }
 
     private clear(): void {
@@ -115,7 +125,16 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
     }
 
     private onTermOfUseChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({checked: event.target.checked, inputError: ""});
+        this.setState({termsAccepted: event.target.checked, inputError: ""}, () => this.setStorage());
+    }
+
+    private setStorage(): void {
+        const data = {
+            info: this.state.info, 
+            remark: this.state.remark, 
+            termsAccepted: this.state.termsAccepted
+        };
+        localStorage.setItem('inputData', JSON.stringify(data));
     }
 
     private onSubmit(): void {
@@ -124,7 +143,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
             error = 'Package Info can not be empty.';
         } else if (!this.state.remark) {
             error = 'Remark can not be empty.';
-        } else if (!this.state.checked) {
+        } else if (!this.state.termsAccepted) {
             error = 'Please agree with the Terms of Use.';
         }
         if (error) {
@@ -132,12 +151,13 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
             return;
         }
         insertParcels([this.buildParcel()])
-            .then(() => this.reset())
+            .then(() => this.notifyAndReset())
             .catch(error => this.setState({insertionError: error}));
     }
 
-    private reset(): void {
-        this.setState({info: '', remark: '', checked: false});
+    private notifyAndReset(): void {
+        this.setState({info: '', remark: '', termsAccepted: false});
+        localStorage.removeItem('inputData');
         this.props.addToast(this.builToast());
     }
 
