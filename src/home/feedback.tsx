@@ -126,7 +126,7 @@ class FeedbackComponent extends React.Component<FeedbackProps, FeedbackState> {
 
     private buildToast(): ToastProperties {
         return {
-            id: 3,
+            id: Date.now(),
             title: 'Feedback',
             message: 'Thank for your feedback, we will get back to you soon.',
             mode: 'success'

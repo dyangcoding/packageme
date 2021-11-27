@@ -1,6 +1,5 @@
 import * as Realm from 'realm-web';
 import { ParcelProperties, UpstreamParcelProperties } from '../models/parcel';
-import { UpstreamSessionProperties } from '../models/session';
 import { ObjectId } from 'bson';
 
 const REALM_APP_ID = process.env.REACT_APP_REALM_APP_ID || '';
@@ -23,13 +22,6 @@ export async function parcelCollection() {
         .collection<UpstreamParcelProperties>('parcels');
 }
 
-export async function sessionCollection() {
-    const mongoDb = await getMongoDB();
-    return mongoDb
-        .db('findMyPackages')
-        .collection<UpstreamSessionProperties>('sessions');
-}
-
 export async function fetchParcels() {
     const collection = await parcelCollection();
     return collection
@@ -47,11 +39,6 @@ export async function filterParcels(searchTerm: string) {
         ]
     };
     return collection.find(query);
-}
-
-export async function deleteSession(sessionID: string) {
-    const collection = await sessionCollection();
-    return collection.deleteOne({ '_id': sessionID } );
 }
 
 export async function insertParcels(parcels: ReadonlyArray<ParcelProperties>) {

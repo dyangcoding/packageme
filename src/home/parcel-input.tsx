@@ -143,7 +143,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
 
     private builToast(): ToastProperties {
         return {
-            id: 1,
+            id: Date.now(),
             title: 'Package Information',
             message: 'Thanks for helping the Neighbors.',
             mode: 'success'
