@@ -1,5 +1,6 @@
 import React from "react";
-import { HeroIcon } from "../components/herocon-icon";
+import HeroIcon from "../components/herocon-icon";
+import { XIcon } from '@heroicons/react/outline';
 
 export interface ToastProperties {
     readonly id: number;
@@ -37,7 +38,7 @@ class Toast extends React.Component<ToastProps> {
                         {this.getHeaderIcon()}
                         <p className="font-medium">{title}</p>
                     </div>
-                    <HeroIcon icon="XIcon" className="cursor-pointer text-gray-500 h-4 w-4" aria-hidden="true" onClick={this.onDismiss} />
+                    <XIcon className="cursor-pointer text-gray-500 h-4 w-4" aria-hidden="true" onClick={this.onDismiss} />
                 </div>
                 <div className="text-black px-4 py-2">
                     {message}

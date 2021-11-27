@@ -1,17 +1,28 @@
 import React from 'react';
-import { ParcelProperties } from '../models/parcel';
 import { MailIcon, ChatAltIcon, CalendarIcon, CheckIcon } from '@heroicons/react/outline';
 import ReactTooltip from 'react-tooltip';
 import { collectParcel } from '../app/mongo-client';
 import moment from 'moment';
+import { addToast } from '../ui/actions';
+import { connect } from 'react-redux';
+import { ToastProperties } from '../ui/toast';
+import { ParcelProperties } from '../models/parcel';
 
-interface EntryProps {
+interface OwnProps {
     readonly parcel: ParcelProperties;
 }
 
-interface EntryState {}
+interface DispatchProps {
+    readonly addToast: (toast: ToastProperties) => void;
+}
 
-class ParcelEntry extends React.Component<EntryProps, EntryState> {
+interface EntryProps extends OwnProps, DispatchProps {}
+
+interface EntryState {
+    readonly updateError?: string;
+}
+
+class ParcelEntryComponent extends React.Component<EntryProps, EntryState> {
     constructor(props: EntryProps) {
         super(props);
 
@@ -85,8 +96,8 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
         const status = this.props.parcel.collected;
         if (!status) {
             return (
-                <div className="flex items-center justify-center w-full md:w-auto bg-indigo-500 md:bg-transparent rounded-full p-1.5">
-                    <button onClick={this.onCollect} className="text-sm
+                <div className="flex items-center justify-center w-full md:w-auto bg-indigo-500 md:bg-transparent rounded-full p-1.5" onClick={this.onCollect}>
+                    <button className="text-sm
                         font-medium text-white md:text-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         Collect
                     </button>
@@ -98,12 +109,28 @@ class ParcelEntry extends React.Component<EntryProps, EntryState> {
 
     private async onCollect(): Promise<void> {
         const parcel = this.props.parcel;
-        const result = await collectParcel(parcel);
-        // TODO: validate that the parcel has been updated.
-        if (result) {
-            this.setState({collected: true});
+        if (!parcel._id) {
+            throw new Error('Can not update Parcel without _id field.')
         }
+        collectParcel(parcel)
+        .then(() => this.props.addToast(this.buildToast()))
+        .catch(error => this.setState({updateError: error}));
+    }
+
+    private buildToast(): ToastProperties {
+        return {
+            id: Date.now(),
+            title: 'Package',
+            message: 'You collect your Package.',
+            mode: 'success'
+        } as ToastProperties;
     }
 }
 
-export default ParcelEntry;
+function mapDispatchToProps(dispatch: any): DispatchProps {
+    return {
+        addToast: (toast: ToastProperties) => dispatch(addToast(toast)),
+    }
+}
+
+export const ParcelEntry = connect(null, mapDispatchToProps)(ParcelEntryComponent);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeroIcon, IconName } from './herocon-icon';
+import HeroIcon, { IconName } from './herocon-icon';
 
 interface CardProps {
     readonly title: string;
