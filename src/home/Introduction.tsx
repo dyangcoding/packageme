@@ -40,7 +40,7 @@ class Introduction extends React.Component {
                     </div>
                     <div className="leading-tight text-lg py-4">
                         Whether you are looking for the delivered Packages or just have received packages
-                        for the neighbours. 
+                        for the neighbors. 
                         <a href="/" className="border-b-4 border-indigo-600 px-1 text-base capitalize">
                             {process.env.REACT_APP_SITE_NAME}
                         </a>

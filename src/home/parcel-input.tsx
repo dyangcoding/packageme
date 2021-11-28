@@ -7,6 +7,7 @@ import { ToastProperties } from '../ui/toast';
 import { addToast } from '../ui/actions';
 import { connect } from 'react-redux';
 import { ParcelProperties } from '../models/parcel';
+import { NavLink } from 'react-router-dom';
 
 interface DispatchProps {
     readonly addToast: (toast: ToastProperties) => void;
@@ -97,7 +98,7 @@ class ParcelInputComponent extends React.Component<ParcelProps, ParcelState> {
                     <input id="term-of-use" name="term-of-use" type="checkbox" checked={this.state.termsAccepted} onChange={this.onTermOfUseChange}
                         className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
                     <label htmlFor="term-of-use" className="ml-2 block text-sm text-gray-500">
-                        You are agree with the <a href="/legal" className="underline">Terms of Use</a>.
+                        You are agree with the <NavLink to="/legal" className="underline">Terms of Use</NavLink>.
                     </label>
                 </div>
                 <button type="submit" onClick={this.onSubmit}

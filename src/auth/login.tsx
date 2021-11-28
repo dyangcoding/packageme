@@ -4,6 +4,7 @@ import { AppState } from '../app/store';
 import { XIcon, QrcodeIcon, InformationCircleIcon } from '@heroicons/react/outline';
 import { login, clearError } from './actions';
 import { setSessionID } from '../services/storage';
+import { NavLink } from 'react-router-dom';
 
 interface OwnProps {
     readonly onToggleDialog: () => void;
@@ -40,6 +41,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         this.onCodeChange = this.onCodeChange.bind(this);
         this.onCodeKeyDown = this.onCodeKeyDown.bind(this);
         this.onLoginClick = this.onLoginClick.bind(this);
+        this.onTermsClick = this.onTermsClick.bind(this);
     }
 
     public componentDidUpdate(prevProps: LoginProps): void {
@@ -145,7 +147,8 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         return (
             <div className="flex items-center justify-start p-2 md:p-5 border-t border-solid border-blueGray-200 rounded-b">
                 <InformationCircleIcon className="flex-none text-gray-500 h-4 w-4" aria-hidden="true" />
-                <div className="text-sm text-gray-500 ml-1">By Login You are agreed with the <a href="/legal" className="underline">Terms of Use</a>.</div>
+                <div className="text-sm text-gray-500 ml-1">By Login You are agreed with the 
+                    <NavLink to="/legal" className="underline" onClick={this.onTermsClick}>Terms of Use</NavLink>.</div>
             </div>
         );
     }
@@ -175,6 +178,10 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
 
     private onLoginClick(_event: React.MouseEvent<HTMLButtonElement>): void {
         this.handleChange();
+    }
+
+    private onTermsClick(): void {
+        this.props.onToggleDialog();
     }
 
     private handleChange(): void {
