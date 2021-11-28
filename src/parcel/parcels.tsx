@@ -154,7 +154,7 @@ class ParcelListComponent extends React.Component<ParcelListProps, ParcelListSta
         if (this.state.searchTerm) {
             message = 'Oops, No Packages found for the Search, try something else.';
         } else {
-            message = 'There are no Packages being uploaded. Help neighbours finding packages by uploading package informations.';
+            message = 'There are no Packages being uploaded. Help neighbors finding packages by uploading package informations.';
         }
         return (
             <div className="flex flex-col items-center justify-center">
