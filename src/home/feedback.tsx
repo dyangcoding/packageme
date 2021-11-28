@@ -38,7 +38,7 @@ class FeedbackComponent extends React.Component<FeedbackProps, FeedbackState> {
     public render(): React.ReactNode {
         const { email, message } = this.state;
         return (
-            <div className="fixed bottom-20 right-2 border border-gray-200 shadow w-4/5 md:w-4/5 lg:w-1/4 xl:w-1/6 text-white bg-gray-700 opacity-90 rounded-md">
+            <div className="fixed bottom-20 right-2 border border-gray-200 shadow w-4/5 sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 text-white bg-gray-700 opacity-90 rounded-md">
                 <div className="flex flex-col p-4 mx-auto shadow-sm">
                     <div className="p-1 bg-white rounded-full ml-auto" onClick={this.onToggleDialog}>
                         <XIcon className="cursor-pointer text-red-500 h-6 w-6" aria-hidden="true" />
