@@ -36,7 +36,7 @@ class Introduction extends React.Component {
                         Help finding packages.
                     </div>
                     <div className="text-2xl font-bold tracking-relaxed mb-2">
-                        For you, for the neighbours, for us all.
+                        For you, for the neighbors, for us all.
                     </div>
                     <div className="leading-tight text-lg py-4">
                         Whether you are looking for the delivered Packages or just have received packages
